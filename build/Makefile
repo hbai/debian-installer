@@ -417,6 +417,7 @@ endif
 		echo 'DISTRIB_ID=$(LSB_DISTRIB_ID)' > $(TREE)/etc/lsb-release; \
 		echo 'DISTRIB_DESCRIPTION=$(LSB_DISTRIB_DESCRIPTION)' >> $(TREE)/etc/lsb-release; \
 		echo 'DISTRIB_RELEASE=$(LSB_DISTRIB_RELEASE)' >> $(TREE)/etc/lsb-release; \
+		echo 'X_INSTALLATION_MEDIUM=$(MEDIUM)' >> $(TREE)/etc/lsb-release; \
 	fi
 
 	@touch $@
@@ -429,26 +430,34 @@ $(STAMPS)tree-$(targetstring)-stamp: $(STAMPS)tree-unpack-$(targetstring)-stamp
 	-mknod $(TREE)/dev/console c 5 1
 	-mknod $(TREE)/dev/null c 1 3
 
+	mkdir -p $(EXTRAUDEBSDIR)
+	mkdir -p $(EXTRAUDEBSDPKGDIR)/info $(EXTRAUDEBSDPKGDIR)/updates
+	touch $(EXTRAUDEBSDPKGDIR)/status $(EXTRAUDEBSDPKGDIR)/available
 ifdef EXTRADRIVERS
 	# Unpack the udebs of additional driver disks, so mklibs runs on them too.
-	mkdir -p $(EXTRADRIVERSDIR)
-	mkdir -p $(EXTRADRIVERSDPKGDIR)/info $(EXTRADRIVERSDPKGDIR)/updates
-	touch $(EXTRADRIVERSDPKGDIR)/status $(EXTRADRIVERSDPKGDIR)/available
-	dpkg $(DPKG_UNPACK_OPTIONS) --log=/dev/null --root=$(EXTRADRIVERSDIR) --unpack \
+	dpkg $(DPKG_UNPACK_OPTIONS) --log=/dev/null --root=$(EXTRAUDEBSDIR) --unpack \
 		$(wildcard $(foreach dir,$(EXTRADRIVERS),$(dir)/*.udeb))
+endif
+ifdef EXTRAUDEBS
+	# Get and unpack extra udebs too.
+	get-packages udeb $(EXTRAUDEBS)
+	dpkg $(DPKG_UNPACK_OPTIONS) --log=/dev/null --root=$(EXTRAUDEBSDIR) --unpack \
+		$(foreach udeb,$(EXTRAUDEBS),$(UDEBDIR)/$(udeb).udeb)
 endif
 
 	# Library reduction. Existing libs from udebs are put in the udeblibs
 	# directory and mklibs is made to use those in preference to the
 	# system libs.
 	rm -rf $(TEMP)/udeblibs
+ifndef ONLY_KLIBC
 	mkdir -p $(TEMP)/udeblibs
-	-cp -a `find $(EXTRADRIVERSDIR)/lib -name '*.so.*'` $(TEMP)/udeblibs
+	-cp -a `find $(EXTRAUDEBSDIR)/lib -name '*.so.*'` $(TEMP)/udeblibs
 	-cp -a `find $(TREE)/lib -name '*.so.*'` $(TEMP)/udeblibs
 	mkdir -p $(TREE)/lib
-	$(MKLIBS) -L $(TREE)/usr/lib -L $(TEMP)/udeblibs -v -d $(TREE)/lib \
-		--root=$(TREE) `find $(TEMP) -type f -perm +0111 -o -name '*.so' | grep -v udeblibs`
+	$(MKLIBS) -L $(TREE)/usr/lib -L $(TEMP)/udeblibs -v -d $(TREE)/lib --root=$(TREE) \
+		`find $(TEMP) -type f -a \( -perm +0111 -o -name '*.so' -o -name '*.so.*' \) | grep -v udeblibs`
 	rm -rf $(TEMP)/udeblibs
+endif
 
 	# Add missing symlinks for libraries
 	/sbin/ldconfig -n $(TREE)/lib $(TREE)/usr/lib
@@ -480,15 +489,15 @@ ifdef DROP_LANG
 	# Not ideal, but useful if you're very tight on space.
 	set -e; \
 	for FILE in $$(find $(TREE)/var/lib/dpkg -name "*.templates"); do \
-		perl -e 'my $$status=0; my $$drop=shift; while (<>) { if (/^[A-Z]/ || /^$$/) { if (/^(Choices|Description|Indices|Default)-($$drop)/) { $$status = 0 } else { $$status = 1 } } print if ($$status); }' ${DROP_LANG} < $$FILE > temp; \
+		perl -e 'my $$status=0; my $$drop=shift; while (<>) { if (/^[A-Z]/ || /^$$/) { if (/^(Choices|Description|Indices|Default)-($$drop)/ && ! /^Choices-C:/) { $$status = 0 } else { $$status = 1 } } print if ($$status); }' ${DROP_LANG} < $$FILE > temp; \
 		mv temp $$FILE; \
 	done
 endif
 
 	# Strip all kernel modules, just in case they haven't already been
 	set -e; \
-	for module in `find $(TREE)/lib/modules/ -name '*.o' -name '*.ko'`; do \
-	    strip -R .comment -R .note -g $$module; \
+	for module in `find $(TREE)/lib/modules/ -name '*.o' -or -name '*.ko'`; do \
+	    strip -R .comment -R .note -g $$module || true; \
 	done
 
 	# Remove some unnecessary dpkg files.
@@ -505,20 +514,15 @@ endif
 	# Collect the used UTF-8 strings, to know which glyphs to include in
 	# the font.
 	cat needed-characters/*.utf > $(TEMP)/all.utf
-ifdef EXTRADRIVERS
-	if [ -n "`find $(EXTRADRIVERSDPKGDIR)/info/ -name \\*.templates`" ]; then \
-		cat $(EXTRADRIVERSDPKGDIR)/info/*.templates >> $(TEMP)/all.utf; \
+	if [ -n "`find $(EXTRAUDEBSDPKGDIR)/info/ -name \\*.templates`" ]; then \
+		cat $(EXTRAUDEBSDPKGDIR)/info/*.templates >> $(TEMP)/all.utf; \
 	fi
-endif
 	if [ -n "`find $(DPKGDIR)/info/ -name \\*.templates`" ]; then \
 		cat $(DPKGDIR)/info/*.templates >> $(TEMP)/all.utf; \
 	fi
 
-ifdef EXTRADRIVERS
-	# Remove additional driver disk contents now that we're done with
-	# them.
-	rm -rf $(EXTRADRIVERSDIR)
-endif
+	# Remove extra udebs now that we're done with them.
+	rm -rf $(EXTRAUDEBSDIR)
 
 	# Tree target ends here. Whew!
 	@touch $@
@@ -709,12 +713,12 @@ $(STAMPS)extra-$(targetstring)-stamp: $(STAMPS)get_udebs-$(targetstring)-stamp
 	done
 	for udeb in $(TREE)/*.udeb ; do \
 		if [ -f "$$udeb" ]; then \
-			pkg=`basename $$udeb` ; \
+			pkg=`basename $$udeb .udeb` ; \
 			usedsize=`du -bs $$udeb | awk '{print $$1}'` ; \
 			usedblocks=`du -s $$udeb | awk '{print $$1}'` ; \
 			usedcount=1 ; \
-			version=`dpkg-deb --info $$udeb | grep '^Version:' | awk '{print $$2}'` ; \
-			arch=`dpkg-deb --info $$udeb | grep Architecture: | awk '{print $$2}'` ; \
+			version=`dpkg-deb --info $$udeb | grep '^ *Version:' | awk '{print $$2}'` ; \
+			arch=`dpkg-deb --info $$udeb | grep '^ *Architecture:' | awk '{print $$2}'` ; \
 			echo " $$usedsize B - $$usedblocks blocks - $$usedcount files used by pkg $$pkg (version $$version)" >>$(TEMP)/diskusage.txt; \
 			echo "$$pkg $$version $$arch" >> $(TEMP_UDEB_LIST); \
 		fi; \
@@ -895,7 +899,7 @@ _qemu: $(TARGET)
 		$(QEMU) -fda $(BOOT); \
 	;; \
 	CD-ROM) \
-		$(QEMU) -cdrom $(MINIISO); \
+		$(QEMU) -cdrom $(BOOT); \
 	;; \
 	*) \
 		echo "Sorry, don't know how to handle media type '$(MEDIA_TYPE)'" >&2; \

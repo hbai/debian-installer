@@ -4,9 +4,10 @@ Priority: optional
 Maintainer: Debian Install System Team <debian-boot@lists.debian.org>
 Uploaders: Joey Hess <joeyh@debian.org>, Alastair McKinstry <mckinstry@computer.org>, Joshua Kwan <joshk@triplehelix.org>, Frans Pop <fjp@debian.org>
 Standards-Version: 3.6.2
+XS-Vcs-Svn: svn://svn.debian.org/d-i/trunk/installer
 Build-Conflicts: libnewt-pic [mipsel]
 # NOTE: Do not edit the next line by hand. See comment below.
-Build-Depends: debhelper (>= 4), apt, apt-utils, gnupg, debian-archive-keyring, dpkg (>= 1.13.9), grep-dctrl, bc, debiandoc-sgml, libbogl-dev [!kfreebsd-i386 !kfreebsd-amd64 !hurd-i386], glibc-pic, libparted1.6-13, libslang2-pic, libnewt-pic [!mipsel], libnewt-dev [mipsel], libtextwrap1, cramfsprogs [powerpc ia64 mips mipsel arm armeb], genext2fs (>= 1.3-7.1), e2fsprogs, mklibs (>= 0.1.15), mkisofs, genromfs [sparc], hfsutils [powerpc], dosfstools [i386 ia64 m68k amd64], cpio, devio [arm armeb], syslinux (>= 2.11-0.1) [i386 amd64], palo [hppa], elilo [ia64], yaboot [powerpc], aboot (>= 0.9b-2) [alpha], silo [sparc], sparc-utils [sparc], genisovh [mips], delo [mipsel], tip22 [mips], colo (>= 1.21-1) [mipsel], sibyl [mips mipsel], atari-bootstrap [m68k], vmelilo [m68k], m68k-vme-tftplilo [m68k], amiboot [m68k], tofrodos [i386 amd64 kfreebsd-i386 kfreebsd-amd64], mtools (>= 3.9.9-1) [i386 ia64 m68k amd64 kfreebsd-i386 kfreebsd-amd64], modutils [arm i386 mips mipsel powerpc s390 sparc], module-init-tools [i386 powerpc amd64 alpha hppa ia64 sparc mips mipsel arm armeb], bf-utf-source [!s390 !s390x !kfreebsd-i386 !kfreebsd-amd64], upx-ucl-beta (>= 1:1.91+0.20030910cvs-2) [i386], mkvmlinuz [powerpc]
+Build-Depends: debhelper (>= 4), apt, apt-utils, gnupg, debian-archive-keyring (>= 2006.11.22), dpkg (>= 1.13.9), grep-dctrl, bc, debiandoc-sgml, libbogl-dev [!kfreebsd-i386 !kfreebsd-amd64 !hurd-i386], glibc-pic, libslang2-pic (>= 2.0.6-4), libnewt-pic [!mipsel], libnewt-dev [mipsel], libgcc1 [amd64], cramfsprogs [powerpc ppc64 ia64 mips mipsel arm armeb armel], genext2fs (>= 1.3-7.1), e2fsprogs, mklibs (>= 0.1.15), mkisofs, genromfs [sparc], hfsutils [powerpc ppc64], dosfstools [i386 ia64 m68k amd64], cpio, devio [arm armeb armel], slugimage (>= 0.10+r58-6) [arm armeb armel], nwutil [arm], syslinux (>= 2.11-0.1) [i386 amd64], palo [hppa], elilo [ia64], yaboot [powerpc ppc64], aboot (>= 0.9b-2) [alpha], silo [sparc], sparc-utils [sparc], genisovh [mips], delo [mipsel], tip22 [mips], colo (>= 1.21-1) [mipsel], sibyl [mips mipsel], atari-bootstrap [m68k], vmelilo [m68k], m68k-vme-tftplilo [m68k], amiboot [m68k], emile [m68k], emile-bootblocks [m68k], apex-nslu2 [arm armeb], tofrodos [i386 amd64 kfreebsd-i386 kfreebsd-amd64], mtools (>= 3.9.9-1) [i386 ia64 m68k amd64 kfreebsd-i386 kfreebsd-amd64], modutils [mips mipsel powerpc], module-init-tools [i386 arm armeb armel amd64 alpha hppa ia64 m68k mips mipsel powerpc ppc64 s390 sparc], bf-utf-source [!s390 !s390x], upx-ucl-beta (>= 1:1.91+0.20030910cvs-2) [i386], mkvmlinuz [powerpc ppc64], openssl [arm armel]
 # This package has the worst Build-Depends in Debian, so it deserves some
 # explanation. Note that this comment can also be used to generate a
 # Build-Depends line, by running the debian/genbuilddeps program.
@@ -23,7 +24,7 @@ Build-Depends: debhelper (>= 4), apt, apt-utils, gnupg, debian-archive-keyring, 
 # 		apt-ftparchive is used for including localudebs.
 #	- gnupg
 #		New versions of apt need gnupg for security checks.
-#	- debian-archive-keyring
+#	- debian-archive-keyring (>= 2006.11.22)
 #		To provide the archive key for security checks.
 #	- dpkg (>= 1.13.9)
 #		We tweak dpkg logging options only understood by this
@@ -38,26 +39,23 @@ Build-Depends: debhelper (>= 4), apt, apt-utils, gnupg, debian-archive-keyring, 
 #		For bdftobogl used in font reduction.
 #	
 # Library build dependencies:
-#	Libraries can come from three sources: From a udeb, from the build
-#	system via library reduction, or from the build system with no library
-#	reduction done. We'd like to eventually do away with that last.
 #	- glibc-pic
 #		For library reduction.
-#	- libparted1.6-13
-#		Only needed for monolithic image builds, and only because
-#		of broken udeb deps. Will be fixed.
-#	- libslang2-pic
+#	- libslang2-pic (>= 2.0.6-4)
+#		Make dependency versioned temporarily to make sure we avoid #392942
 #	- libnewt-pic [!mipsel]
 #		Rather than use slang and newt udebs, reduced versions of
 #		the libraries are put onto images to save space.
 #	- libnewt-dev [mipsel]
 #		On mipsel, we can't use libnewt-pic right now due to bug
 #		#329733. See also Build-Conflicts above.
-#	- libtextwrap1
-#		Used by cdebconf. Should be a udeb, but isn't.
+#	- libgcc1 [amd64]
+#		On amd64 we need to include /lib/libgcc_s.so.1 in g-i initrds to
+#		work around #373253 until upstream can remove pthread_cancel()
+#		calls in directfb. For now, this is done by setting EXTRAFILES.
 #
 # Filesystem tools:
-#	- cramfsprogs [powerpc ia64 mips mipsel arm armeb]
+#	- cramfsprogs [powerpc ppc64 ia64 mips mipsel arm armeb armel]
 #		For arches that use cramfs initrds.
 #	- genext2fs (>= 1.3-7.1)
 #		For creating ext2 filesystems without being root.
@@ -74,7 +72,7 @@ Build-Depends: debhelper (>= 4), apt, apt-utils, gnupg, debian-archive-keyring, 
 #	- genromfs [sparc]
 #		Used for creating sparc floppies (which are not built by
 #		default.)
-#	- hfsutils [powerpc]
+#	- hfsutils [powerpc ppc64]
 #		For making bootable HFS USB sticks for powerpc.
 #	- dosfstools [i386 ia64 m68k amd64]
 #		For creating FAT filesystems with mkfs.msdos.
@@ -83,9 +81,13 @@ Build-Depends: debhelper (>= 4), apt, apt-utils, gnupg, debian-archive-keyring, 
 #		m68k uses it for atari floppies
 #	- cpio
 #		For creating initramfs images.
-#	- devio [arm armeb]
+#	- devio [arm armeb armel]
 #		Tool to read and write from block devices, used to byteswap
-#		kernels.
+#		kernels and add nslu2 boot magic.
+#	- slugimage (>= 0.10+r58-6) [arm armeb armel]
+#		For building nslu2 firmware images.
+#	- nwutil [arm]
+#		For building netwinder netinst images.
 #
 # Boot loaders:
 #	On many arches boot loaders are copied onto or ran on the boot
@@ -95,7 +97,7 @@ Build-Depends: debhelper (>= 4), apt, apt-utils, gnupg, debian-archive-keyring, 
 #		There were some crippling bugs in version 2.10.
 #	- palo [hppa]
 #	- elilo [ia64]
-#	- yaboot [powerpc]
+#	- yaboot [powerpc ppc64]
 #		For all our powerpc boot needs. Well, not really.
 #	- aboot (>= 0.9b-2) [alpha]
 #		A previous version didn't have netabootwrap.
@@ -124,7 +126,11 @@ Build-Depends: debhelper (>= 4), apt, apt-utils, gnupg, debian-archive-keyring, 
 #		to a warning when it fails.
 #	- amiboot [m68k]
 #		Bootloader for m68k/amiga machines.
-#
+#	- emile [m68k]
+#	- emile-bootblocks [m68k]
+#		Bootloader for m68k/mac machines.
+#	- apex-nslu2 [arm armeb]
+#		2nd stage bootloader for Linksys NSLU2.
 # Architecture specific build dependencies:
 #	- tofrodos [i386 amd64 kfreebsd-i386 kfreebsd-amd64]
 #		For todos, used on files that need to be accessible from
@@ -133,10 +139,10 @@ Build-Depends: debhelper (>= 4), apt, apt-utils, gnupg, debian-archive-keyring, 
 #		mcopy is used to put files onto FAT filesystems w/o
 #		mounting them.
 #
-#	- modutils [arm i386 mips mipsel powerpc s390 sparc]
+#	- modutils [mips mipsel powerpc]
 #		depmod is used to generate a modules.dep for images at
 #		build time. For 2.4 kernels.
-#	- module-init-tools [i386 powerpc amd64 alpha hppa ia64 sparc mips mipsel arm armeb]
+#	- module-init-tools [i386 arm armeb armel amd64 alpha hppa ia64 m68k mips mipsel powerpc ppc64 s390 sparc]
 #		depmod for 2.6 kernels on the arches that support 2.6.
 #
 #	- bf-utf-source [!s390 !s390x !kfreebsd-i386 !kfreebsd-amd64]
@@ -146,9 +152,12 @@ Build-Depends: debhelper (>= 4), apt, apt-utils, gnupg, debian-archive-keyring, 
 #		i386 uses upx to compress kernels and other binaries
 #		The version is the first one that worked well enough for
 #		us.
-#	- mkvmlinuz [powerpc]
+#	- mkvmlinuz [powerpc ppc64]
 #		Used to make powerpc images that can boot direct from
 #		firmware w/o using a boot loader.
+#	- openssl [arm armel]
+#		Used to encrypt a firmware image so an ARM based device
+#		(Thecus N2100) will accept it.
 
 Package: debian-installer
 Architecture: any
