@@ -1,4 +1,92 @@
-debian-installer (2006xxxx) UNRELEASED; urgency=low
+debian-installer (2007xxxx) UNRELEASED; urgency=low
+
+  [ Steve Langasek ]
+  * Drop obsolete boot args from alpha netboot images.
+  * Switch alpha cdrom images from initrd to initramfs (untested, but should
+    work).
+
+  [ Joey Hess ]
+  * Changes to target lenny.
+
+  [ Frans Pop ]
+  * Drop build dependency on modutils (only needed for 2.4 kernels).
+  * Excluding non-us for sources.list.udeb should no longer be needed; add
+    exclusion for volatile.debian.{org,net}.
+  * x86: document parameters to disable ACPI and USB on F6 isolinux help screen.
+  * Switch i386, amd64, sparc and s/390 to 2.6.20-1.
+  * Don't include usb-discover in images as USB modules should be loaded
+    automatically now.
+
+  [ Colin Watson ]
+  * Don't try to mount devfs if $(TREE)/etc/udev exists.
+  * Remove apparently-stray test for /dev/tty that broke tree_umount target
+    for udev builds.
+  * Run the demo in the C.UTF-8 locale.
+
+  [ Martin Michlmayr ]
+  * Remove rpc images because RiscPC machines are no longer supported.
+  * Remove DECstation images because these machines are no longer supported.
+  * Switch mips, mipsel and arm to 2.6.20-1.
+  * Cobalt: don't turn the serial console on explicitly since this will
+    kill Qube 2700 boxen and it's on by default on those machines with
+    a serial console anyway.
+
+  [ Joey Hess ]
+  * Exclude pciutils-udeb from the i386 root floppy as it's out of space
+    again thanks to libc etc bloat and we can do without lspci.
+    Closes: #420078
+
+  [ dann frazier ]
+  * Update ia64 to 2.6.20 - omit scsi-common-modules udev since these modules
+    have been merged into the scsi-modules udeb
+
+  [ Martin Michlmayr ]
+  * Switch arm, mips and mipsel to 2.6.21-1.
+
+  [ Frans Pop ]
+  * Switch i386, amd64, alpha and s390 to 2.6.21-1.
+  * Include the default release for the target system and the release from
+    which to retrieve udebs in images. The first makes it unnecessary to
+    hardcode the default release in choose-mirror and the last ensures
+    consistency between udebs included in the initrd and udebs retrieved
+    during the installation. See #424640 and #426303.
+    Requires net-retriever 1.18.
+
+  [ Joey Hess ]
+  * Stop including KEYRING onto initrds. Needs base-installer 1.80 and
+    net-retriever 1.17, which use the udeb, and debian-archive-keyring-udeb
+    2007.02.19-0.1.
+  * No need to unset KEYRING for floppies anymore. Closes: #423265.
+  * Work around upx-ucl-beta bug #426747.
+  * Exclude core-modules from i386 driver floppies, it's available on the root
+    floppy.
+
+  [ Stephen R. Marenka ]
+  * m68k: Drop all non-at keymaps, except amiga, since we only support 2.6.
+  * m68k: Add -at keymaps explicitly to atari floppy.
+  * m68k: Add -amiga keymaps explicitly to pkg-lists.
+  * m68k: Punt the remainder INITRD22 stuff and simplify the rest.
+  * Switch m68k to 2.6.21-1.
+
+  [ Frans Pop ]
+  * Use BASEVERSION variable for powerpc to avoid needing to modify the kernel
+    version for each flavor separately.
+  * G-I for i386 is now also affected by the VT switching issue that earlier
+    affected only amd64 (#373253). Include libgcc_s.so.1 to work around this.
+
+  [ Joey Hess ]
+  * Changes to support new wireless nic modules udeb.
+  * Switch i386 to have 3 net-drivers floppies. The second one now contains
+    wireless, usb, and pcmcia drivers, while the third contains
+    nic-extra-modules.
+  * Set APT::Install-Recommends=false in get-packages as a preventive measure
+    to avoid getting recommended udebs when apt later defaults to installing
+    recommends. (Mostly a no-op as there are very few udeb recommends
+    currently.)
+
+ -- Joey Hess <joeyh@debian.org>  Mon, 18 Jun 2007 09:06:31 +0100
+
+debian-installer (20070308) unstable; urgency=low
 
   [ Thiemo Seufer ]
   * Add Qemu mips/mipsel images, thanks Aurelien Jarno.
@@ -8,7 +96,6 @@ debian-installer (2006xxxx) UNRELEASED; urgency=low
     to i386 net-drivers-1 floppy.
 
   [ Frans Pop ]
-  * Set default suite to etch (etch branch only).
   * Switch font used for Dzongkha in g-i to ttf-tmuni.
 
   [ Martin Michlmayr ]
@@ -144,7 +231,13 @@ debian-installer (2006xxxx) UNRELEASED; urgency=low
   * [ia64] Fix elilo boot screen formatting - the addition of the time
     to the $BUILD_DATE variable was causing an ugly line wrap
 
- -- dann frazier <dannf@debian.org>  Fri,  2 Mar 2007 15:25:15 -0700
+  [ Joey Hess ]
+  * Document use of generic.all_generic_ide=1 in f6.txt.
+
+  [ Frans Pop ]
+  * Set default suite to etch (etch branch only).
+
+ -- Frans Pop <fjp@debian.org>  Thu,  8 Mar 2007 23:43:33 +0100
 
 debian-installer (20061102) unstable; urgency=low
 
