@@ -13,19 +13,18 @@
 # priority udebs.
 
 localechooser
-auto-install
-ai-choosers
-rescue-mode
+#auto-install
+#ai-choosers
+#rescue-mode
 # Need to choose a mirror for debootstrap to download Debian from.
-choose-mirror
+#choose-mirror
 # Network setup stuff.
 ethdetect
-netcfg
-# needed by partman-lvm
-libdevmapper1.02-udeb
+#netcfg
 
 preseed-common
 initrd-preseed
 file-preseed
 libfribidi0-udeb
 cdebconf-newt-udeb
+cdebconf-newt-terminal ?

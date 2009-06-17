@@ -449,8 +449,8 @@ endif
 	# Create a dev tree.
 	mkdir -p $(TREE)/dev
 	# Always needed, in case udev is not mounted on boot.
-	-mknod $(TREE)/dev/console c 5 1
-	-mknod $(TREE)/dev/null c 1 3
+	mknod $(TREE)/dev/console c 5 1
+	mknod $(TREE)/dev/null c 1 3
 
 	mkdir -p $(EXTRAUDEBSDIR)
 	mkdir -p $(EXTRAUDEBSDPKGDIR)/info $(EXTRAUDEBSDPKGDIR)/updates
@@ -877,7 +877,7 @@ tree_mount: $(STAMPS)tree-$(targetstring)-stamp
 
 .PHONY: tree_umount
 tree_umount:
-	-@[ ! -L $(TREE)/proc/self ] || [ ! -c $(TREE)/dev/tty ] || sudo /bin/umount $(TREE)/proc
+	-@[ ! -L $(TREE)/proc/self ] || sudo /bin/umount $(TREE)/proc
 
 # For manual invocation, we provide a demo rule. This starts the
 # d-i demo from the tree in tmp.

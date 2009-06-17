@@ -151,7 +151,7 @@ Build-Depends: debhelper (>= 4), apt, apt-utils, gnupg, debian-archive-keyring (
 #	- module-init-tools [i386 armeb armel amd64 alpha hppa ia64 m68k mips mipsel powerpc s390 sparc]
 #		depmod for 2.6 kernels on the arches that support 2.6.
 #
-#	- bf-utf-source [!s390 !s390x !kfreebsd-i386 !kfreebsd-amd64]
+#	- bf-utf-source [!s390 !s390x]
 #		Contains the unicode font we use. Not a udeb since we
 #		perform font reduction at build time.
 #	- upx-ucl (>= 3) [i386]
