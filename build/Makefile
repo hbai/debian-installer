@@ -86,11 +86,11 @@ targetdirs = $(subst _,/,$(targetstring))
 # a non-existing file and ignore it.
 include config/common
 include config/dir
--include config/local
 -include config/$(ARCH).cfg
 -include config/$(ARCH)/$(SUBARCH).cfg
 -include config/$(ARCH)/$(SUBARCH)/$(MEDIUM).cfg
 -include config/$(ARCH)/$(SUBARCH)/$(MEDIUM)/$(FLAVOUR).cfg
+-include config/local
 
 export KEYRING
 
@@ -104,15 +104,15 @@ define recurse_once
 endef
 
 define recurse_many
-  @set -e; $(foreach var,$($(1)_SUPPORTED),$(submake) $(2)_$(3) $(1)=$(var);)
+  @set -e; $(foreach var,$($(1)_SUPPORTED) $(if $(RECURSE_EXTRA),$($(1)_SUPPORTED_EXTRA)),$(submake) $(2)_$(3) $(1)=$(var);)
 endef
 
 define recurse
-  $(if $($(1)_SUPPORTED),$(call recurse_many,$(1),$(2),$(3)),$(call recurse_once,$(2),$(3)))
+  $(if $($(1)_SUPPORTED)$(if $(RECURSE_EXTRA),$($(1)_SUPPORTED_EXTRA)),$(call recurse_many,$(1),$(2),$(3)),$(call recurse_once,$(2),$(3)))
 endef
 
 define genext2fs
-  genext2fs -d $(TREE) -b `expr $$(du -s $(TREE) | cut -f 1) + $$(expr $$(find $(TREE) | wc -l) \* 2)` -r 0
+  genext2fs -d $(TREE) -b `expr $$(du -s $(TREE) | cut -f 1) + $$(expr $$(find $(TREE) | wc -l) \* 2)` -m 0
 endef
 
 define mkinitramfs
@@ -170,7 +170,7 @@ validate_%:
 	@set -e; \
 	SUBARCH= var='$(subst _, ,$(subst validate_,,$@))'; \
 	tmp=$$(echo $$var |sed 's/[ ].*$$//'); \
-	[ -z '$(SUBARCH_SUPPORTED)' ] || [ -z "$$tmp" ] || [ -z "$$(echo $(SUBARCH_SUPPORTED) |grep -w $$tmp)" ] || SUBARCH=$$tmp; \
+	[ -z '$(SUBARCH_SUPPORTED)$(SUBARCH_SUPPORTED_EXTRA)' ] || [ -z "$$tmp" ] || [ -z "$$(echo $(SUBARCH_SUPPORTED) $(SUBARCH_SUPPORTED_EXTRA) |grep -w $$tmp)" ] || SUBARCH=$$tmp; \
 	$(submake) medium_validate SUBARCH=$$SUBARCH var="$$var"
 
 .PHONY: medium_validate
@@ -178,7 +178,7 @@ medium_validate:
 	@set -e; \
 	MEDIUM= var="$(strip $(patsubst $(SUBARCH)%,%,$(var)))"; \
 	tmp=$$(echo $$var |sed 's/[ ].*$$//'); \
-	[ -z '$(MEDIUM_SUPPORTED)' ] || [ -z "$$tmp" ] || [ -z "$$(echo $(MEDIUM_SUPPORTED) |grep -w $$tmp)" ] || MEDIUM=$$tmp; \
+	[ -z '$(MEDIUM_SUPPORTED)$(MEDIUM_SUPPORTED_EXTRA)' ] || [ -z "$$tmp" ] || [ -z "$$(echo $(MEDIUM_SUPPORTED) $(MEDIUM_SUPPORTED_EXTRA) |grep -w $$tmp)" ] || MEDIUM=$$tmp; \
 	$(submake) flavour_validate MEDIUM=$$MEDIUM var="$$var"
 
 .PHONY: flavour_validate
@@ -186,7 +186,7 @@ flavour_validate:
 	@set -e; \
 	FLAVOUR= var="$(strip $(patsubst $(MEDIUM)%,%,$(var)))"; \
 	tmp=$$(echo $$var |sed 's/[ ].*$$//'); \
-	[ -z '$(FLAVOUR_SUPPORTED)' ] || [ -z "$$tmp" ] || [ -z "$$(echo $(FLAVOUR_SUPPORTED) |grep -w $$tmp)" ] || FLAVOUR=$$tmp; \
+	[ -z '$(FLAVOUR_SUPPORTED)$(FLAVOUR_SUPPORTED_EXTRA)' ] || [ -z "$$tmp" ] || [ -z "$$(echo $(FLAVOUR_SUPPORTED) $(FLAVOUR_SUPPORTED_EXTRA) |grep -w $$tmp)" ] || FLAVOUR=$$tmp; \
 	$(submake) finish_validate FLAVOUR=$$FLAVOUR var="$$var"
 
 .PHONY: finish_validate
@@ -212,7 +212,7 @@ list:
 	@echo "all_clean"
 	@echo "reallyclean"
 	@echo
-	@$(submake) all_list
+	@$(submake) all_list RECURSE_EXTRA=1
 
 .PHONY: _list
 _list:
@@ -300,6 +300,32 @@ $(STAMPS)tree-unpack-$(targetstring)-stamp: $(STAMPS)get_udebs-$(targetstring)-s
 	mkdir -p $(DPKGDIR)/updates/
 	touch $(DPKGDIR)/available
 
+ifdef TRANSSTATUS
+	# Include translation status file; warn if older than 2 weeks.
+	# Do this first to make possible warnings more visible.
+	@echo; \
+	if [ -f "$(TRANSSTATUS)" ]; then \
+		olddate=$$(grep "^# Generated on:" $(TRANSSTATUS) | sed "s/.*: //"); \
+		if [ "$$olddate" ]; then \
+			if [ $$(( $$(date -u "+%s") - \
+			          $$(date -d "$$olddate" "+%s") \
+			       )) -gt 1209600 ]; then \
+				echo "WARNING: The data in '$(TRANSSTATUS)' is older than 2 weeks."; \
+				echo "         Should it maybe be updated?"; \
+				sleep 15; \
+			fi; \
+		else \
+			echo "WARNING: no timestamp found in $(TRANSSTATUS)."; \
+			sleep 15; \
+		fi; \
+		mkdir -p $(TREE)/usr/share/localechooser; \
+		cp $(TRANSSTATUS) $(TREE)/usr/share/localechooser/translation-status; \
+	else \
+		echo "WARNING: the file $(TRANSSTATUS) does not exist."; \
+		sleep 5; \
+	fi
+endif
+
 	# Unpack the udebs with dpkg. This command must run as root
 	# or fakeroot.
 	echo -n > $(TEMP)/diskusage.txt
@@ -353,7 +379,7 @@ ifdef KERNELVERSION_FIXME
 			[ ! -e $(TREE)/boot/System.map ] || sysmap_name="$(TREE)/boot/System.map"; \
 		fi; \
 		[ -z "$$sysmap_name" ] || sysmap_opt="-F $$sysmap_name"; \
-		if [ -d $(TREE)/lib/modules/$(VERSION) ]; then \
+		if [ -d $(TREE)/lib/modules/$(VERSION) ] && [ -z "$(OMIT_DEPMOD)" ]; then \
 			mkdir -p $(TREE)/lib/modules/$(VERSION)/kernel; \
 			$(shell choose-subarch-env $(VERSION)) depmod $$sysmap_opt -q -a -b $(TREE)/ $(VERSION); \
 		fi; \
@@ -397,6 +423,7 @@ ifdef PRESEED
 	cp -a $(PRESEED) $(TREE)/preseed.cfg
 endif
 
+ifndef OMIT_LSB
 	# Create an lsb release file.
 	if [ ! -e $(TREE)/etc/lsb-release ]; then \
 		set -e; \
@@ -406,6 +433,7 @@ endif
 		echo 'DISTRIB_RELEASE=$(LSB_DISTRIB_RELEASE)' >> $(TREE)/etc/lsb-release; \
 		echo 'X_INSTALLATION_MEDIUM=$(MEDIUM)' >> $(TREE)/etc/lsb-release; \
 	fi
+endif
 
 	@touch $@
 
@@ -420,7 +448,7 @@ endif
 
 	# Create a dev tree.
 	mkdir -p $(TREE)/dev
-	# Always needed, in case devfs is not mounted on boot.
+	# Always needed, in case udev is not mounted on boot.
 	-mknod $(TREE)/dev/console c 5 1
 	-mknod $(TREE)/dev/null c 1 3
 
@@ -450,6 +478,8 @@ ifndef ONLY_KLIBC
 	-cp -a `find $(TREE)/lib -name '*.so.*'` $(TEMP)/udeblibs
 	mkdir -p $(TREE)/lib
 	$(MKLIBS) -L $(TREE)/usr/lib -L $(TEMP)/udeblibs -v -d $(TREE)/lib --root=$(TREE) \
+		-L $(TREE)/usr/lib/cdebconf/frontend \
+		$(addprefix -l,$(notdir $(wildcard $(TREE)/usr/lib/cdebconf/frontend/*.so))) \
 		`find $(TEMP) -type f -a \( -perm +0111 -o -name '*.so' -o -name '*.so.*' \) | grep -v udeblibs`
 	rm -rf $(TEMP)/udeblibs
 endif
@@ -479,6 +509,10 @@ endif
 	echo "Description: debian installation image" >> $(DPKGDIR)/status
 	echo >> $(DPKGDIR)/status
 
+ifdef OMIT_DPKG
+	rm -rf $(DPKGDIR)
+endif
+
 ifdef DROP_LANG
 	# Remove languages from the templates.
 	# Not ideal, but useful if you're very tight on space.
@@ -505,6 +539,7 @@ endif
 		fi; \
 		rm $$file; \
 	done
+	rm -rf $(TREE)/var/lib/dpkg/triggers
 
 	# Collect the used UTF-8 strings, to know which glyphs to include in
 	# the font.
@@ -541,14 +576,7 @@ sources.list.udeb:
 	if [ "$(MIRROR)x" != "x" ]; then \
 		echo "deb $(MIRROR) $(USE_UDEBS_FROM) $(UDEB_COMPONENTS)"; \
 	else \
-		grep '^deb[ \t]' $(SYSTEM_SOURCES_LIST) \
-		|grep -v '^deb[ \t]cdrom:' \
-		|grep -v '\(security.debian.org\|volatile.debian.\(net\|org\)\)' \
-		|grep '[ \t]main' \
-		|awk '{print $$1 " " $$2}' \
-		|sed "s,/* *$$, $(USE_UDEBS_FROM) $(UDEB_COMPONENTS)," \
-		|sed "s,^deb file,deb copy," \
-		|perl -ne 'print unless $$seen{$$_}; $$seen{$$_}=1' ; \
+		gen-sources.list.udeb "$(SYSTEM_SOURCES_LIST)" $(USE_UDEBS_FROM) $(UDEB_COMPONENTS) ; \
 	fi) > $@
 
 
@@ -606,20 +634,34 @@ $(TEMP_INITRD): $(STAMPS)tree-$(targetstring)-stamp arch_tree
 
 # Create the images for dest/. Those are the targets called from config.
 
+ifeq ($(SYMLINK_INITRD),)
 $(INITRD): $(TEMP_INITRD)
 	install -m 644 -D $< $@
 	update-manifest $@ $(MANIFEST-INITRD) $(UDEB_LISTS)
+else
+$(INITRD): $(realpath $(dir $(INITRD))/$(SYMLINK_INITRD))
+	mkdir -p $(dir $(INITRD))
+	ln -s $(SYMLINK_INITRD) $@
+	update-manifest $@ $(MANIFEST-INITRD) $(UDEB_LISTS)
+endif
 
 $(RAMDISK): $(TEMP_INITRD)
 	install -m 644 -D $< $@
 	update-manifest $@ $(MANIFEST-RAMDISK) $(UDEB_LISTS)
 
 # raw kernel images
+ifeq ($(SYMLINK_KERNEL),)
 $(KERNEL): TEMP_REAL_KERNEL = $(TEMP)/$(shell echo ./$@ |sed 's,$(SOME_DEST)/$(EXTRANAME),,')
 $(KERNEL):
 	@$(MAKE) $(STAMPS)tree-unpack-$(targetstring)-stamp $(TEMP_REAL_KERNEL)
 	install -m 644 -D $(TEMP_REAL_KERNEL) $@
 	update-manifest $@ $(MANIFEST-KERNEL)
+else
+$(KERNEL): $(realpath $(dir $(KERNEL))/$(SYMLINK_KERNEL))
+	mkdir -p $(dir $(KERNEL))
+	ln -s $(SYMLINK_KERNEL) $@
+	update-manifest $@ $(MANIFEST-KERNEL)
+endif
 
 # bootable images
 $(BOOT): $(TEMP_BOOT)
@@ -651,9 +693,9 @@ $(DEBIAN_CD_INFO): $(TEMP_BOOT_SCREENS) $(TEMP_CD_INFO_DIR)
 
 # a directory full of files for netbooting
 $(NETBOOT_DIR): $(NETBOOT_DIR_TARGETS) $(TEMP_BOOT_SCREENS) $(TEMP_NETBOOT_DIR)
-	rm -rf $(SOME_DEST)/$(EXTRANAME)/debian-installer
-	mkdir -p $(SOME_DEST)/$(EXTRANAME)/debian-installer
-	cp -a $(TEMP_NETBOOT_DIR)/debian-installer/* $@
+	rm -rf $(SOME_DEST)/$(EXTRANAME)/$(NETBOOT_DI_DIR)
+	mkdir -p $(SOME_DEST)/$(EXTRANAME)/$(NETBOOT_DI_DIR)
+	cp -a $(TEMP_NETBOOT_DIR)/$(NETBOOT_DI_DIR)/* $@
 	$(foreach link,$(NETBOOT_DIR_LINKS), \
 		rm -f $@/../$(link); \
 		cp -a $(TEMP_NETBOOT_DIR)/$(link) $@/..; \
@@ -662,6 +704,9 @@ $(NETBOOT_DIR): $(NETBOOT_DIR_TARGETS) $(TEMP_BOOT_SCREENS) $(TEMP_NETBOOT_DIR)
 
 # a tarball for netbooting
 $(NETBOOT_TAR): $(TEMP_NETBOOT_DIR)
+	# Create an version info file.
+	echo 'Debian version:  $(DEBIAN_VERSION)' > $(TEMP_NETBOOT_DIR)/version.info
+	echo 'Installer build: $(BUILD_DATE)' >> $(TEMP_NETBOOT_DIR)/version.info
 	(cd $(TEMP_NETBOOT_DIR); tar czf - .) > $@
 	update-manifest $@ $(MANIFEST-NETBOOT_TAR) $(UDEB_LISTS)
 
@@ -686,7 +731,7 @@ $(TEMP_EXTRA): $(STAMPS)extra-$(targetstring)-stamp
 	install -d $(TREE)
 	set -e; case $(INITRD_FS) in \
 	ext2) \
-		genext2fs -d $(TREE) -b $(IMAGE_SIZE) -r 0 $@ ; \
+		genext2fs -d $(TREE) -b $(IMAGE_SIZE) -m 0 $@ ; \
 		$(e2fsck) $@ || true ;; \
 	cramfs) \
 		$(mkcramfs) $@ ;; \
