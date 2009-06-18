@@ -8,6 +8,8 @@
 # Files:
 #   sources.list.udeb / sources.list.udeb.local
 #   sources.list.deb  / sources.list.deb.local
+#   preferences.udeb.local
+#   preferences.deb.local
 #
 # Environment:
 #   APTDIR       - basename for the apt directory (default: apt.$TYPE)
@@ -44,6 +46,10 @@ if [ ! $KEYRING ]; then
 	KEYRING=/etc/apt/trusted.gpg
 fi
 
+if [ ! -e "$LOCALUDEBDIR" ]; then
+	mkdir -p "$LOCALUDEBDIR"
+fi
+
 # Set APTDIR according to type
 # debs are kept in another apt cache so only the needed Packages files
 # are downloaded and autoclean doesnt run wild.
@@ -71,8 +77,10 @@ fi
 
 # All these options make apt read the right sources list, and use APTDIR for
 # everything so it need not run as root.
-APT_GET="apt-get --assume-yes --allow-unauthenticated \
+APT_GET="apt-get --assume-yes \
 	-o Dir::Etc::sourcelist=`pwd`/$LIST \
+	-o Dir::Etc::sourceparts=/dev/null \
+	-o Dir::Etc::Preferences=`pwd`/preferences.$TYPE.local \
 	-o Dir::State=`pwd`/$APTDIR/state \
 	-o Debug::NoLocking=true \
 	-o Dir::Cache=`pwd`/$APTDIR/cache \
@@ -95,7 +103,7 @@ else
 	echo -n > $APTDIR/state/status
 	# Some archs have libc6, others have libc6.1. libgcc1 is not used
 	# on all architectures.
-	for i in libc6 libc6.1 libnewt0.52 libgcc1; do
+	for i in libc0.1 libc0.3 libc6 libc6.1 libnewt0.52 libgcc1; do
 		if dpkg -s $i >/dev/null 2>&1; then
 			dpkg -s $i | grep -v Depends: >> $APTDIR/state/status
 			echo >> $APTDIR/state/status
