@@ -1,4 +1,317 @@
-debian-installer (2007xxxx) UNRELEASED; urgency=low
+debian-installer (2009xxxx) UNRELEASED; urgency=low
+
+  [ Colin Watson ]
+  * Merge from Ubuntu:
+    - Document new $default_filesystem substitution and
+      $default_filesystem{ } internal specifier in partman recipes.
+  * Initial changes to target squeeze (see
+    http://lists.debian.org/debian-release/2009/01/msg00682.html for its
+    version number).
+  * Add cdebconf-newt-terminal to most images that include
+    cdebconf-newt-udeb (although not floppies).
+  * Introduce *_SUPPORTED_EXTRA variables, which can be used to define
+    "optional" supported targets. Use this to allow monolithic to be built
+    without having to edit configuration files and without bloating official
+    builds.
+  * Use os-prober-udeb rather than os-prober for powerpc monolithic target
+    (thanks, Wartan Hachaturow).
+
+  [ Martin Michlmayr ]
+  * Remove support for the old arm port.
+  * Convert the Thecus N2100 image to an initramfs.
+  * Include minix-modules on the orion5x image for the D-Link DNS-323,
+    thanks Matt Palmer.
+  * Generate images for the D-Link DNS-323 and Conceptronic CH3SNAS,
+    thanks Matt Palmer.  Closes: #503040.
+  * Use the 2.6.29 kernel on armel, mips and mipsel.
+  * Add images for the Marvell Kirkwood platform, including images for
+    the QNAP TS-119, TS-219 and TS-219P, and SheevaPlug.
+
+  [ Wartan Hachaturow ]
+  * Add CHRP boot structure on ISO images, Closes: #411728, #411203.
+  * Add monolithic support for powerpc64.
+  * Use 2.6.29 kernel on powerpc/powerpc64.
+
+  [ Otavio Salvador ]
+  * Bump kernels to use new 2.6.26-2 kernels.
+
+  [ Christian Perrier ]
+  * Add needed characters for Kirghiz.
+
+  [ Frans Pop ]
+  * Drop support for the ppc64 architecture.
+
+  [ Stephen R. Marenka ]
+  * Move m68k to 2.6.29-1.
+
+  [ dann frazier ]
+  * Use 2.6.29-1 kernel on ia64.
+
+  [ Frans Pop ]
+  * Switch to 2.6.29-2 kernel for hppa.
+
+  [ Ian Campbell ]
+  * Add netboot-xen images for amd64.
+
+  [ Otavio Salvador ]
+  * Switch to 2.6.29-2 kernel for amd64 and i386.
+
+  [ Aurelien Jarno ]
+  * Use back mklibs instead of mklibs-copy on mips and mipsel now that
+    they work again.
+
+  [ Frans Pop ]
+  * Implement version 2.0 of syslinux framework for x86. Basically this
+    backports the structure already implemented in debian-cd before the
+    release of Lenny to D-I (allowing to simplify the code in debian-cd).
+    Main changes:
+    - enhance templates to support selecting a default desktop environment
+    - support four types of syslinux configuration by setting SYSLINUX_CFG
+    - allow to define alternative default desktop environment (DESKTOP)
+    - split out rescue options as those are independent of desktop selection
+    - simplify setting correct directory to kernel/initrd for debian-cd
+  * Using the new framework, users can now also select an alternative desktop
+    environments from the boot menu for netboot/miniiso-based installs.
+  * sparc: display message for unsupported subarchitectures (mini.iso).
+
+  [ Luca Favatella ]
+  * Handle libc0.1 (GNU/kFreeBSD) and libc0.3 (GNU/Hurd) as libc6/libc6.1.
+
+ -- Frans Pop <fjp@debian.org>  Sat, 13 Jun 2009 16:35:46 +0200
+
+debian-installer (20090123) unstable; urgency=low
+
+  [ Frans Pop ]
+  * Add build dependency on docbook-xml, needed for D-I internals.
+
+ -- Otavio Salvador <otavio@debian.org>  Fri, 23 Jan 2009 12:38:07 -0200
+
+debian-installer (20090122) unstable; urgency=low
+
+  [ Martin Michlmayr ]
+  * Fix off-by-one: the QNAP initrd should be padded to exactly 4 MB,
+    not 4 MB - 1 byte.
+
+  [ Otavio Salvador ]
+  * Add pata-modules on cdrom images (i386 and amd64) to enable support
+    for Marvell controllers and others.
+
+  [ Frans Pop ]
+  * Update minimum memory/diskspace requirements in x86 syslinux help
+    screens. New values are the same as in the Installation Guide.
+
+  [ Samuel Thibault ]
+  * Add uinput-modules to cdrom, netboot and hd-media images (amd64, alpha,
+    i386, ppc64, ia64 and powerpc) to improve brltty device support.
+
+  [ Otavio Salvador ]
+  * Apply patch from Jurij Smakov to add usb-storage to cdrom and netboot
+    images (sparc) to allow firmware to be loaded from a usb devices.
+    Closes: #505789.
+
+  [ Frans Pop ]
+  * Add option in syslinux configuration to return to graphical boot menu
+    from the help screens. Based on research done by Franklin Piat.
+    Closes: #505750.
+  * Rename syslinux adamd*.cfg files to amdad*.cfg.
+  * Rename syslinux *text.cfg files to *txt.cfg. This is needed because
+    adamdtext.cfg is one character too long which means it was never actually
+    included in the menu for multi-arch images.
+
+  [ Franklin Piat ]
+  * Add help text for help option in graphical syslinux boot menu to indicate
+    how to return to the menu from the help screens.
+    The new configuration also improves editing the command line from the
+    graphical syslinux menu if it flows over into a second line.
+
+  [ Frans Pop ]
+  * Add ext2-modules to hd-media images for i386, amd64 and powerpc.
+    Closes: #510015.
+  * Update copyright to 2009.
+
+ -- Otavio Salvador <otavio@debian.org>  Thu, 22 Jan 2009 21:05:03 -0200
+
+debian-installer (20081029) unstable; urgency=low
+
+  * Disable powerpc floppy. Fixes a FTBFS in powerpc architecture.
+
+ -- Otavio Salvador <otavio@debian.org>  Wed, 29 Oct 2008 10:02:02 -0200
+
+debian-installer (20081027) unstable; urgency=low
+
+  [ Frans Pop ]
+  * Test that a mirror supports the target suite before it's added to
+    sources.list.udeb. Should fix build failures on lxdebian for s390,
+    which includes an incomplete mirror in its /etc/apt/sources.list.
+  * config/s390.cfg: avoid loading partman-auto during anna as guided
+    partitioning is not very useful for DASDs.
+  * Include isofs-modules in hd-media images now that the isofs module has
+    been split out of the ide-modules udeb (kernels >=2.6.25).
+
+  [ Martin Michlmayr ]
+  * nslu2: Make sure the whole ramdisk partition is padded now that
+    APEX tells the kernel to look at the whole partition.
+  * Remove delo from Build-Depends since DECstations are no longer
+    supported.
+  * Move arm, armel, mips and mipsel to 2.6.25.
+  * Enable the netwinder image again.
+  * Add images for QNAP TS-109, TS-209 and TS-409.
+  * Add an image for the HP Media Vault mv2120.
+  * Add an image for the Buffalo Kurobox Pro.  Patch from Per Andersson
+    as part of his Google Summer of Code project.
+  * Move arm, armel and mipsel to 2.6.26.
+  * Move mips to 2.6.26.
+  * Add a README to the arm images saying that the arm port is not
+    recommended for new installations.
+
+  [ Joey Hess ]
+  * Use menu default64 support added to syslinux 2:3.63+dfsg-2 to
+    automatically select the amd64 installation option on multiarch images.
+
+  [ Colin Watson ]
+  * Test OMIT_WIN32_LOADER in arch_cd_info_dir and arch_miniiso targets as
+    well as arch_boot.
+
+  [ Joey Hess ]
+  * mountfloppy renamed to mountmedia
+  * floppy-retriever renamed to media-retriever
+  * Add usb-storage-modules to all netboot images that use mountmedia.
+    This will allow loading NIC drivers/firmware from a USB stick.
+
+  [ Otavio Salvador ]
+  * Include firewire-core-modules on cdrom images (i386 and amd64) to allow
+    usage of firewire dockstations (as found on some VAIO laptops). See
+    #488267 for reference.
+  * Move alpha, amd64, i386 and powerpc to 2.6.25.
+
+  [ Frans Pop ]
+  * Add ext2-modules for i386 boot floppy as ext2 is no longer built in.
+  * Move hppa, ia64 and sparc to 2.6.25.
+  * Add 3 characters that are directly accessible from Dutch and British
+    keyboards to needed-characters/nl.utf.
+
+  [ Ian Campbell ]
+  * Add i386 netboot-xen flavour using PAE enabled kernel compatible with PAE
+    and 64 bit hypervisors.
+
+  [ Robert Millan ]
+  * config/x86.cfg: Make desktop selection explicit in win32-loader.ini.
+    Closes: #486907.
+
+  [ Joey Hess ]
+  * Disable upx for all images due to bug #490149.
+  * Version newt build dependencies to ensure that buggy old versions are not
+    used.
+
+  [ Jérémy Bobbio ]
+  * Add cdebconf-gtk-terminal to graphical images.
+  * Move powerpc kernel to 2.6.26.
+  * Add virtio-modules to amd64 and i386 netboot images.
+
+  [ Otavio Salvador ]
+  * Move alpha, amd64, i386, ia64, hppa and sparc to 2.6.26.
+
+  [ Samuel Thibault ]
+  * Optionally add a beep to the x86 syslinux menu, controlled by BOOTMENU_BEEP.
+    This is enabled by default only for release builds.
+
+  [ Bastian Blank ]
+  * Move s390 to 2.6.26-1.
+  
+  [ Stephen R. Marenka ]
+  * Move m68k to 2.6.26-1.
+  * Add modules to cdrom.
+  * Rename atari bootstra.prg to bootstra.tos.
+
+  [ Frans Pop ]
+  * Apply patch from Samuel Thibault to add Speakup accessibility support to
+    Graphical Installer images for i386 and amd64.
+  * Rename syslinux config files (ad)amd.cfg to (ad)amdtext.cfg for consistency.
+  * Drop languages that require a graphical installer for all arm and armel
+    images to reduce image size.
+  * x86: set correct default entries in the isolinux config for booting the
+    installer from the help screens. Closes: #500464.
+  * x86: add support for installing to and loading drivers/firmware from
+    MMC/SD cards. Closes: #498568.
+
+ -- Otavio Salvador <otavio@debian.org>  Mon, 27 Oct 2008 08:52:06 -0200
+
+debian-installer (20080522) unstable; urgency=low
+
+  [ Stephen R. Marenka ]
+  * Add atari keymaps to pkg-lists for m68k.
+
+  [ Frans Pop ]
+  * Lenny will be version 5.0.
+  * Improve consistency between x86 syslinux bootmethod help screens.
+  * Add nic-usb-modules to netboot images for x86 and ia64.
+
+  [ Otavio Salvador ]
+  * Update to 2.6.24-1 kernel (i386, mipsel, arm, armel and amd64).
+
+  [ Robert Millan ]
+  * Add images for the versatile platform (armel).
+
+  [ Martin Michlmayr ]
+  * Activate the images for the MIPS Malta platform (mips and mipsel),
+    thanks Aurelien Jarno.
+  * Remove the QEMU flavour on mips and mipsel since it's replaced
+    by Malta.
+  * Update mips to 2.6.24-1.
+  * Use initramfs rather than cramfs on Cobalt since the initrd is too
+    large.
+  * Use initramfs on MIPS Malta.
+
+  [ Frans Pop ]
+  * Remove dropped cdrom-modules kernel udebs from package list for i386,
+    amd64 and alpha.
+  * Update to 2.6.24-1 kernel for alpha, hppa, ia64, powerpc, s390 and sparc.
+  * Remove wireless-tools from package lists as it's not required to configure
+    wireless networking.
+  * Remove Alastair McKinstry and Joshua Kwan as Uploaders with many thanks
+    for their past contributions.
+
+  [ Joey Hess ]
+  * The i386 root floppy has been changed to a bare gzipped cpio file,
+    null-paddded to the end of the floppy. This needs rootskel-bootfloppy
+    version 1.60.
+  * Use syslinux's vesamenu for all x86 images except the boot floppy.
+  * Split up syslinux config files.
+  * Note that the pxelinux config file for serial terminals has been dropped,
+    at least for now, since the split config files made it too difficult to
+    set up.
+  * Note that this needs debian-cd changes to change its code for
+    merging syslinux configs when producing i386+amd64 CDs.
+  * Document the irqpoll boot parameter. Closes: #477988
+
+  [ Frans Pop ]
+  * For official builds, include a file with translation status information in
+    images to allow localechooser can warn users for incomplete translations.
+    A current status file should be generated before every upload.
+
+  [ Otavio Salvador ]
+  * Use genisoimage instead of mkisofs.
+  * Disable i386 floppy image since 2.6.24 kernel image is too big to fit
+    on a floppy.
+
+  [ Frans Pop ]
+  * Include both version number and codename as release identification.
+  * Add a version.info file inside netboot tarballs. Closes: #475774.
+
+  [ Otavio Salvador ]
+  * Add cdebconf-text-entropy to common EXTRAUDEBS variable and
+    cdebconf-gtk-entropy on all gtk images.
+
+ -- Otavio Salvador <otavio@debian.org>  Thu, 22 May 2008 12:25:14 -0300
+
+debian-installer (20080227) unstable; urgency=low
+
+  [ Martin Michlmayr ]
+  * Disable the Netwinder image for now since it's too large.
+
+ -- Frans Pop <fjp@debian.org>  Wed, 27 Feb 2008 18:22:25 +0100
+
+debian-installer (20080224) unstable; urgency=low
 
   [ Steve Langasek ]
   * Drop obsolete boot args from alpha netboot images.
@@ -22,6 +335,8 @@ debian-installer (2007xxxx) UNRELEASED; urgency=low
   * Remove apparently-stray test for /dev/tty that broke tree_umount target
     for udev builds.
   * Run the demo in the C.UTF-8 locale.
+  * Correct partman-auto-recipe.txt's descriptions of the $defaultignore,
+    $lvmignore, and $lvmok specifiers to include the $.
 
   [ Martin Michlmayr ]
   * Remove rpc images because RiscPC machines are no longer supported.
@@ -73,6 +388,10 @@ debian-installer (2007xxxx) UNRELEASED; urgency=low
     version for each flavor separately.
   * G-I for i386 is now also affected by the VT switching issue that earlier
     affected only amd64 (#373253). Include libgcc_s.so.1 to work around this.
+  * For i386 and amd64, add the 'quiet' kernel boot option for all boot
+    methods except expert mode. This reduces the amount of output to the
+    console to only a few messages before the first D-I dialog is displayed.
+  * Drop build dependency on mkisofs for s390 as we don't need it there.
 
   [ Joey Hess ]
   * Changes to support new wireless nic modules udeb.
@@ -84,7 +403,95 @@ debian-installer (2007xxxx) UNRELEASED; urgency=low
     recommends. (Mostly a no-op as there are very few udeb recommends
     currently.)
 
- -- Joey Hess <joeyh@debian.org>  Mon, 18 Jun 2007 09:06:31 +0100
+  [ Frans Pop ]
+  * Increase build dependency on mklibs to version 0.1.23; needed to avoid
+    build failures or broken images after post-Etch toolchain changes.
+  * Switch alpha, amd64, arm, i386, m68k, mips, mipsel and s390 to 2.6.21-2.
+  * Get rid of hardcoded kernel versions in boot configuration files for mips
+    and mipsel; rename bootscreen-subst to bootvars-subst to reflect this
+    somewhat more general use of this script.
+  * Drop compatibility symlink to old location of the graphical mini.iso.
+  * Switch ia64 to 2.6.21-2.
+
+  [ Joey Hess ]
+  * Switch to dhcp3-client-udeb.
+  * Remove ugly workaround for apex filename transition, long over.
+
+  [ Frans Pop ]
+  * Remove support for sparc32 as it is no longer supported for Lenny.
+  * Simplify build structure for sparc.
+  * Switch sparc, powerpc and hppa to 2.6.21-2.
+
+  [ Joey Hess ]
+  * Remove pcmcia-cs-udeb from ads_cf image, as it's no longer in Debian.
+  * Remove old "linux" syslinux label for x86, it was replaced by "install".
+  * Convert mips/arcboot.conf to use "install" and not "linux" as the label as
+    well.
+  * Apply patch from Václav Ovsík adding a NETBOOT_DI_DIR variable.
+
+  [ Davide Viti ]
+  * Switch g-i as to use ttf-dejavu for rendering Georgian text
+
+  [ Christian Perrier ]
+  * Replace the build dependency on grep-dctrl (transition package) by dctrl-tools
+
+  [ Joey Hess ]
+  * Call dh_md5sums.
+
+  [ Robert Millan ]
+  * Integrate win32-loader utility.  (Closes: #412922)
+
+  [ Martin Michlmayr ]
+  * Fix the bootvars-subst call on mips so the actual kernel version will be
+    used.
+
+  [ Joey Hess ]
+  * Change f8.txt to document tasksel/desktop.
+
+  [ Jérémy Bobbio ]
+  * Add support for apt_preferences(5) files (preferences.{deb,udeb}.local) to
+    ease development when packages are broken in unstable.
+
+  [ Bastian Blank ]
+  * Support coming cdebconf frontend changes.
+  * Bump build dependency for mklibs.
+
+  [ Otavio Salvador ]
+  * Switch alpha, amd64, arm, hppa, i386, ia64, m68k, mips, mipsel, powerpc,
+    s390 and sparc to 2.6.22-2.
+  * Load config/local by last so we can override previously set options.
+  * Support setting an extra udeb to be included exporting the EXTRAS
+    environment variable.
+  * Allow DEBIAN_VERSION to be overriden using environment variable.
+
+  [ Frans Pop ]
+  * Disable builds for PowerPC PReP images as there are no prep kernels
+    available.
+
+  [ Joey Hess ]
+  * Switch i386 to 2.6.22-3.
+
+  [ Martin Michlmayr ]
+  * Switch all other architectures to 2.6.22-3.
+  * Use mklibs-copy rather than mklibs on mips and mipsel for now since
+    the latter doesn't work.
+
+  [ Colin Watson ]
+  * Move Frans' d-i internals manual from doc/talks/d-i_debconf6/ to
+    doc/devel/internals/, and build it by default.
+
+  [ Joey Hess ]
+  * Switch from upx-ucl-beta to upx-ucl, now that it's out of beta.
+  * Avoid using sources.list.d when downloading udebs. Closes: #459612
+
+  [ Aurelien Jarno ]
+  * Add support for MIPS Malta platform, but keep it disabled for now.
+
+  [ Frans Pop ]
+  * Add build dependency on libgcc1 for i386 also as we include libgcc_s for
+    graphical installer images.
+
+ -- Otavio Salvador <otavio@debian.org>  Sun, 24 Feb 2008 06:39:28 -0300
 
 debian-installer (20070308) unstable; urgency=low
 
