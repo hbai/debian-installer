@@ -11,6 +11,7 @@ cdrom-detect
 cdrom-retriever
 load-cdrom
 cdrom-checker
+bogl-bterm-udeb
 di-utils-terminfo
 cdebconf-newt-udeb
 cdebconf-newt-terminal ?
