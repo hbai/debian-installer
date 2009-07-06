@@ -20,7 +20,7 @@ localechooser
 #choose-mirror
 # Network setup stuff.
 ethdetect
-#netcfg
+netcfg
 
 preseed-common
 initrd-preseed
