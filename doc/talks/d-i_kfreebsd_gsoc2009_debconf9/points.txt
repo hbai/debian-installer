@@ -1,0 +1,19 @@
+what you've done so far / where you are
+
+http://slackydeb.blogspot.com/2009/04/previous-attempts-to-port-d-i-to_27.html
+http://slackydeb.blogspot.com/2009/04/analysis-of-differences-between.html
+http://slackydeb.blogspot.com/2009/05/busybox-status-on-gnukfreebsd.html
+[week6]
+http://slackydeb.blogspot.com/2009/06/porting-parted-on-gnukfreebsd.html
+
+
+
+how the attendance can help you
+
+busybox config -linux and udeb-kfreebsd
+split rootskel-bootfloppy
+add Linux compatible sysinfo() to GNU/kFreeBSD
+
+
+
+URLs

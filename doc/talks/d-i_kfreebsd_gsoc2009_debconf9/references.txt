@@ -1,0 +1,21 @@
+--------
+
+http://lists.alioth.debian.org/pipermail/soc-coordination/2009-July/000610.html
+
+I'd like you to prepare about 3 minutes worth of presentation for your project. This should be max 2-3 slides. Tell us what your project is about, what you've done so far, and how the attendance can help you.
+
+--------
+
+20090702 IRC #debian-soc
+
+(17:09:13) slackydeb: ArthurLiu: is there a template for the 2-3 slides debconf presentation? e.g. sample latex or lyx or odt...
+(17:09:30) ArthurLiu: err
+(17:09:56) slackydeb: ArthurLiu: err means no?
+17:10
+(17:10:14) ArthurLiu: I haven't prepared one
+(17:10:51) ArthurLiu: stuff you can put: you can start by presenting yourself
+(17:11:10) ArthurLiu: presentation of the project, where you are
+(17:11:12) ArthurLiu: URLs
+(17:11:13) ArthurLiu: etc
+
+--------
