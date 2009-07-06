@@ -120,7 +120,6 @@ define mkinitramfs
 endef
 
 define mkfs.ufs
-  set -ex ; \
   fs=`mktemp` ; \
   dd if=/dev/zero of=$${fs} bs=1M count=16 ; \
   md=`mdconfig -a -t vnode -f $${fs}` ; \
