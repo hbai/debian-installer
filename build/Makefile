@@ -119,11 +119,11 @@ define mkinitramfs
   (cd $(TREE) && find . | cpio --quiet -o -H newc) > 
 endef
 
-define mkfs.ufs
+define mkfs.ufs2
   fs=`mktemp` ; \
   dd if=/dev/zero of=$${fs} bs=1M count=16 ; \
   md=`mdconfig -a -t vnode -f $${fs}` ; \
-  mkfs.ufs /dev/$${md} ; \
+  mkfs.ufs -O2 /dev/$${md} ; \
   mnt=`mktemp -d` ; mount /dev/$${md} $${mnt} ; \
   cp -a $(TREE)/* $${mnt}/ ; \
   umount $${mnt} ; rmdir $${mnt} ; \
@@ -622,8 +622,8 @@ $(TEMP_INITRD): $(STAMPS)tree-$(targetstring)-stamp arch_tree
 	jffs2) \
 		$(mkjffs2) $(TEMP_INITRD); \
 	;; \
-	ufs) \
-		$(mkfs.ufs) $(TEMP)/initrd; \
+	ufs2) \
+		$(mkfs.ufs2) $(TEMP)/initrd; \
 		gzip -v9f $(TEMP)/initrd; \
 	;; \
 	*) \
