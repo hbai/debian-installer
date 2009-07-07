@@ -105,7 +105,7 @@
       mentor: Aurelien Jarno 
     \end{itemize}
   \item
-    previous efforts by Robert Millan in 2006 [previous]
+    previous efforts by Robert Millan in 2006 [0]
   \end{itemize}
 
 \end{frame}
@@ -120,7 +120,7 @@
     BusyBox udeb
     \begin{itemize}
     \item
-      \st{enable needed not network related config options}
+      \st{enable needed not network related config options} [1]
     \item
       enable some network related config options (if needed)
     \item
@@ -133,7 +133,7 @@
   \item
     \st{rootskel package} (thanks to Robert Millan)
   \item
-    port and enable d-i components to resemble the config options of the current GNU/kFreeBSD installer [sysinstall]
+    port and enable d-i components to resemble the config options of the current GNU/kFreeBSD installer [2]
     \begin{itemize}
     \item
       keyboard layout selection
@@ -151,7 +151,47 @@
 \begin{frame}
   \frametitle{How you can help}
 
-  a
+  \begin{itemize}
+  \item
+    debian-installer
+    \begin{itemize}
+    \item
+      split building of rootskel-bootfloppy in rootskel
+    \item
+      play a bit with parted on GNU/kFreeBSD
+    \item
+      play a bit with console-setup on GNU/kFreeBSD
+    \item
+      kfreebsd-i386 kernel udeb
+      \begin{itemize}
+      \item
+        take a look at massbuild [3]
+      \item
+        build it and analyze console output
+      \end{itemize}
+    \item
+      read code and make it less Linux specific
+    \end{itemize}
+  \item
+    BusyBox
+    \begin{itemize}
+    \item
+      add Linux compatible sysinfo() to GNU/kFreeBSD
+    \item
+      fix ash job control bug
+    \item
+      enable network related config options already present on GNU/Linux udeb
+    \item
+      review patches at [1] and get them merged upstream
+    \item
+      read code and make it less Linux specific
+    \end{itemize}
+  \end{itemize}
+
+  \begin{itemize}
+  \item
+    please ask on debian-boot@l.d.o before starting
+  \end{itemize}
 
 \end{frame}
 
@@ -160,11 +200,17 @@
 
   \begin{itemize}
   \item
-    \text{[previous]}
+    \text{[0]}
     http://slackydeb.blogspot.com/2009/04/previous-attempts-to-port-d-i-to\_27.html
   \item
-    \text{[sysinstall]}
+    \text{[1]}
+    http://slackydeb.blogspot.com/2009/05/busybox-status-on-gnukfreebsd.html
+  \item
+    \text{[2]}
     http://glibc-bsd.alioth.debian.org/doc/installing.html
+  \item
+    \text{[3]}
+    http://lists.debian.org/debian-boot/2009/06/msg00687.html
   \end{itemize}
 
   \begin{itemize}
