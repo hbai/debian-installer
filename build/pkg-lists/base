@@ -4,20 +4,20 @@ busybox-udeb
 anna
 archdetect
 cdebconf-udeb
-cdebconf-priority
+#cdebconf-priority
 di-utils
-di-utils-reboot
+#di-utils-reboot
 di-utils-shell
 libdebconfclient0-udeb
 libdebian-installer4-udeb
-libnss-dns-udeb
+#libnss-dns-udeb
 lowmemcheck
 main-menu
 rootskel
 udpkg
-rescue-check
-env-preseed
-pciutils-udeb
+#rescue-check
+#env-preseed
+#pciutils-udeb
 
 ##include "udev"
 
