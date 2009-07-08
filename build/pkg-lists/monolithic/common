@@ -17,14 +17,14 @@
 #ai-choosers
 #rescue-mode
 # Need to choose a mirror for debootstrap to download Debian from.
-#choose-mirror
+choose-mirror
 # Network setup stuff.
 ethdetect
 netcfg
 
-preseed-common
-initrd-preseed
-file-preseed
-libfribidi0-udeb
+#preseed-common
+#initrd-preseed
+#file-preseed
+#libfribidi0-udeb
 cdebconf-newt-udeb
 cdebconf-newt-terminal ?
