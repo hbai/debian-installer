@@ -19,7 +19,7 @@
 # Need to choose a mirror for debootstrap to download Debian from.
 choose-mirror
 # Network setup stuff.
-ethdetect
+ethdetect -
 netcfg
 
 #preseed-common
