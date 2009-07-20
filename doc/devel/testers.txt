@@ -8,10 +8,8 @@ Alpha:
 
 ARM:
   netwinder:
-    Vincent Sanders <vince@kyllikki.org>
-    Martin Michlmayr <tbm@cyrius.com>
     Kyle McMartin <kyle@debian.org>
-    Jurij Smakov <jurij@wooyd.org>
+    Woody Suwalski <woody@suwalski.net>
 
 HPPA:
     Bernhard R. Link <brlink@debian.org>
@@ -27,10 +25,6 @@ MIPS (big-endian):
     Karsten Merker <karsten@excalibur.cologne.de>
   r5k-ip22 (SGI Indy):
     Peter 'p2' De Schrijver <p2@mind.be>
-  sb1-bcm91250a (Broadcom SWARM):
-    Karsten Merker <karsten@excalibur.cologne.de>
-    Thiemo Seufer <ica2_ts@csv.ica.uni-stuttgart.de>
-    Peter 'p2' De Schrijver <p2@mind.be>
 
 MIPS (little-endian)
   cobalt (Cobalt Qube, RaQ, Qube2, RaQ2)
@@ -40,11 +34,6 @@ MIPS (little-endian)
     Karsten Merker <karsten@excalibur.cologne.de>
     Martin Michlmayr <tbm@cyrius.com>
     Andy Barnes <andy.barnes@gmail.com>
-  r3k-kn02 (DECstation R3K)
-    Peter 'p2' De Schrijver <p2@mind.be>
-    Ulrich Teichert <krypton@ulrich-teichert.org>
-  r4k-kn04 (DECstation R4K)
-    Karsten Merker <karsten@excalibur.cologne.de>
 
 PowerPC:
   powermac_newworld:
