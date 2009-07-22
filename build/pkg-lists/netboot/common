@@ -4,13 +4,14 @@
 # Other udebs that are needed for netboot install
 localechooser
 auto-install
-ai-choosers
+#kbsd hack #ai-choosers
 choose-mirror
 net-retriever
 download-installer
 cdebconf-newt-udeb
+cdebconf-newt-terminal ?
 cdebconf-text-udeb
-installation-locale
+#kbsd hack #installation-locale
 di-utils-terminfo
 preseed-common
 initrd-preseed

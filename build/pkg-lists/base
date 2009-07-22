@@ -6,7 +6,7 @@ archdetect
 cdebconf-udeb
 cdebconf-priority
 di-utils
-#di-utils-reboot
+di-utils-reboot
 di-utils-shell
 libdebconfclient0-udeb
 libdebian-installer4-udeb
@@ -15,11 +15,11 @@ lowmemcheck
 main-menu
 rootskel
 udpkg
-#rescue-check
-#env-preseed
-#pciutils-udeb
+rescue-check
+env-preseed
+pciutils-udeb
 
-##include "udev"
+# kbsd hack #include "udev"
 
 # busybox modutils is gone 
-#module-init-tools-udeb
+# kbsd hack module-init-tools-udeb
