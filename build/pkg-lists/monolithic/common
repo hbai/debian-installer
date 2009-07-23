@@ -12,9 +12,9 @@
 # Note that some of these are due to broken dependencies of standard
 # priority udebs.
 
-#localechooser
-#auto-install
-#ai-choosers
+localechooser
+auto-install
+#kbsd hack #ai-choosers
 #rescue-mode
 # Need to choose a mirror for debootstrap to download Debian from.
 choose-mirror
