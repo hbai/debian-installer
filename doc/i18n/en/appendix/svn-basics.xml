@@ -69,6 +69,11 @@ list.
 For MS-Windows users, a good <acronym>SVN</acronym> client is <emphasis>TortoiseSVN</emphasis> which is free software. It can be downloaded from <ulink url="http://tortoisesvn.tigris.org/">http://tortoisesvn.tigris.org/</ulink>.
 </para>
 
+<para>
+Successful attempts of using <emphasis>TortoiseSVN</emphasis> for &d-i; commits have been reported. The only trick is to feed the checkout URL alone to the "svn import" command of <emphasis>TortoiseSVN</emphasis>, without the leading "svn co" part.
+</para>
+
+
 </sect1>
 
 <sect1>
@@ -210,17 +215,17 @@ Below is an example of a typical checkout for the &base-config; package:
 
 <informalexample>
 <screen>
-user@host:~> svn co &svn-base-config; base-config
+user@host:~> &svn-console-data;
 TODO
 user@host:~> 
 </screen>
 <para>
-After this the <filename>base-config</filename> directory contains all
+After this the <filename>console-data</filename> directory contains all
 files from the package. Updating this directory later needs running the <command>svn update</command>:
 </para>
 <screen>
-user@host:~> cd base-config
-user@host:~/base-config> svn up
+user@host:~> cd console-data
+user@host:~/console-data> svn up
 TODO
 user@host:~>
 </screen>

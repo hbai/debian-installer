@@ -62,6 +62,7 @@ sub apt_cache {
 	
 	return `LANG=C apt-cache \\
 		-o Dir::Etc::sourcelist=./$sourceslist \\
+		-o Dir::Etc::Preferences=./preferences.udeb.local \\
 		-o Dir::State=./apt.udeb/state \\
 		-o Dir::State::Status=./apt.udeb/state/status \\
 		-o Dir::Cache=./apt.udeb/cache $params 2>/dev/null`;
@@ -155,7 +156,20 @@ sub pkgdeps {
 				my @deps;
 				for ($x++; $x < @lines; $x++) {
 					if ($lines[$x]=~/^    (.+)/) {
-						push @deps, $1;
+						my $prov=$1;
+						my %fields;
+						for my $fieldline (apt_cache("show \Q$prov")) {
+							if ($fieldline=~/(.*?):\s*(.*)/) {
+								$fields{lc $1}=$2;
+							}
+						}
+						if (exists $fields{'kernel-version'} and not grep { $_ eq $fields{'kernel-version'} } @kernel_versions) {
+							next;
+						}
+						elsif (exists $fields{subarchitecture} and not grep { $_ eq $sub_arch } split ' ', $fields{subarchitecture}) {
+							next;
+						}
+						push @deps, $prov;
 					}
 					else {
 						$x--;
@@ -237,7 +251,7 @@ sub getlists {
 
 	# Make sure any postponed sets of alternative dependencies
 	# are satisfied. If any of the dependencies in a set are already
-	# selected, that satisfies it. If now, arbitrarily choose the
+	# selected, that satisfies it. If not, arbitrarily choose the
 	# first.
 	while (@postponed) {
 		my $set=pop @postponed;

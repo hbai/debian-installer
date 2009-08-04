@@ -63,16 +63,22 @@ other Debian packages:
 		    eject
 		  </para>
 		</listitem>
+		<listitem>
+		  <para>
+		    grub2
+		  </para>
+		</listitem>
 	  </itemizedlist>
 
 <para>
-Iso-codes and console-data packages material is used by some level1
+iso-codes and console-data packages material is used by some level1
 packages from &d-i; while others are packages installed as part of the
-base system and prompting users in default installs.
+base system and prompting users during installs (either default ones
+or in some conditions).
 </para>
 
 <para>
-Translators should translate these files in the same order they appear
+Translators should translate these files in the same order that they appear
 in this section.
 </para>
 
@@ -126,8 +132,9 @@ Files location and access methods
 </title>
 
 <para>
-Translators should remember that using <acronym>SVN</acronym> is strongly encouraged as
-this is the only way for them to commit their own translations.
+This package is a <quote>regular</quote> Debian package. The
+package maintenance team uses GIT to maintain
+it. 
 </para>
 
 <para>This package's l10n material is spread over three files. These are, by
@@ -161,23 +168,9 @@ Access to these files:
 </para>
 
 <itemizedlist>
-  <listitem>
-<para>
-SVN Checkout commands:
-</para>
-<itemizedlist>
 <listitem>
-Anonymous: <command>&svn-tasksel-anon;</command>
+<acronym>GIT</acronym> access: &git-tasksel;
 </listitem>
-<listitem>
-Non-anonymous: <command>&svn-tasksel;</command>
-</listitem>
-</itemizedlist>
-    <para>
-      Directories  <filename>tasks/po</filename>, <filename>debian/po</filename> and <filename>po</filename> contain the translation material.
-    </para>
-
-  </listitem>
   <listitem>
     <para>
       <acronym>HTTP</acronym> access: 
@@ -273,8 +266,8 @@ likely to be used in other parts of the Debian operating system.
 </para>
 
 <para>
-For this reason, translators need to translate the iso_3166.tab file
-in the <classname>iso-codes</classname> package (ISO-3166 is the
+For this reason, translators need to translate country names
+from ISO-3166 in the <classname>iso-codes</classname> package (ISO-3166 is the
 standard for country (and other <quote>areas of specific geographic
 interest</quote> names and codes)).
 </para>
@@ -289,12 +282,17 @@ Files location and access methods
 
 <para>
 This package is a <quote>regular</quote> Debian package. The
-package maintainer uses a <acronym>SVN</acronym> repository.
+package maintainer uses a <acronym>GIT</acronym> repository.
+However, <classname>iso-codes</classname> domains are also registered in the <ulink url="&url-tp;">Translation Project</ulink>. <classname>iso-codes</classname> encourage translators to use the Translation project in order to update translations for ISO-3166 (as well as ISO-639 for language names, ISO-4217 for currency names, ISO-3166-2 for countries subdivisions names and ISO-15924 for language scripts names).
+</para>
+
+<para>
+As a consequence, references to GIT are kept here only for reference.
 </para>
 
 <itemizedlist>
   <listitem>
-Anonymous SVN checkout command: <command>&svn-iso-codes;</command>
+Anonymous GIT checkout command: <command>&git-iso-codes-anon;</command>
     <para>
       The translation material is in directory <filename>iso_3166</filename> (working on <filename>iso_639</filename>, which contain language names, will be appreciated by maintainers, though not directly useful for &d-i;).
     </para>
@@ -328,7 +326,7 @@ Updating/Adding translations
 </title>
 
 <para>
-Translations should be reported as bugs against the
+Translations should preferrably be updated through the Translation Project. Alternatively, in case a given team of the TP is unresponsive, they can be reported as bugs against the
 <classname>iso-codes</classname> package.
 </para>
 
@@ -364,11 +362,12 @@ maintainer: <email>iso-codes@packages.debian.org</email>.
 </para>
 
 <para>
-The ISO-639 (language names) and ISO-4217 files (currencies names) can
+The ISO-639 (language names), ISO-15924 (scripts names) and ISO-4217 files (currencies names) can
 also be translated. However, this is a very tedious task which may
 turn to be very difficult (translating language names is even more
-difficult than translating country names).
+difficult than translating country names). Finally, for the very courageous translators, ISO-3166-2 is available, featuring thousands of strings for the subdivisions of most countries in the world.
 </para>
+
 </sect3>
 
 </sect2>
@@ -445,21 +444,8 @@ Specific recommendations
 </title>
 
 <para>
-Translators must <emphasis>translate</emphasis> the keyboard layout
-names to <emphasis>real</emphasis> names. For this, they should look
-at the <filename>en.po</filename> file (which is available at
-<ulink url="&console-data-en;">&console-data-en;</ulink>) as this file includes English
-<emphasis>translations</emphasis> of the original keyboard map
-names. 
-</para>
-
-<para>
-For instance <emphasis>de-latin1-nodeadkeys</emphasis> is translated
-to "German" there, so the translation should only be for
-<emphasis>German</emphasis> (in that specific case, the
-<emphasis>nodeadkeys</emphasis> part is not translated: there are technical reasons for this: this is why using the
-English <emphasis>translation</emphasis> as a reference is highly
-recommended).
+The keyboard layout
+names are most of the time language names. Translators should try to remain consistent with translations made for the <classname>iso-codes</classname> package.
 </para>
 
 </sect3>
@@ -583,11 +569,16 @@ The translatable part is the menu entry title.
 Files location and access methods
 </title>
 
+<para>
+This package is a <quote>regular</quote> Debian package. The
+package maintenance team uses GIT to maintain
+it. 
+</para>
+
 <itemizedlist>
-<!--  <listitem>
-Anonymous CVS checkout command: <command>&cvs-eject;</command>
-  </listitem>
--->
+<listitem>
+<acronym>GIT</acronym> access: &git-eject; (documenting how to use GIT is way out of scope of this document)
+</listitem>
   <listitem>
     <para>
       <acronym>HTTP</acronym> access: 
@@ -621,6 +612,71 @@ Translations should be reported as bugs against the <classname>eject</classname>
 </sect3>
 
 </sect2>
+
+<sect2>
+<title>
+Grub2
+</title>
+
+<sect3>
+<title>
+Package description
+</title>
+
+<para>
+During expert installs on i386 and amd64, the <classname>grub2</classname> package may prompt users about installing GRUB 2 instead of the older GRUB.
+</para>
+
+</sect3>
+
+<sect3>
+<title>
+Files location and access methods
+</title>
+
+<para>
+This package is a <quote>regular</quote> Debian package. The
+package maintenance team uses an <acronym>SVN</acronym> repository.
+</para>
+
+<itemizedlist>
+  <listitem>
+Anonymous SVN checkout command: <command>&svn-grub2;</command>
+</listitem>
+  <listitem>
+    <para>
+      <acronym>HTTP</acronym> access: 
+    </para>
+    <itemizedlist>
+      <listitem>
+        <para>
+          <ulink url="&url-level2-pot;/grub2_debian_po.pot">&url-level2-pot;/grub2_debian_po.pot</ulink>
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          &url-level2-po;/grub2_debian_po_&language;.po
+        </para>
+      </listitem>
+    </itemizedlist>
+  </listitem>
+</itemizedlist>
+
+</sect3>
+
+<sect3>
+<title>
+Updating/Adding translations
+</title>
+
+<para>
+Translations should be reported as bugs against the <classname>grub2</classname> package.
+</para>
+
+</sect3>
+
+</sect2>
+
 
 </sect1>
 
