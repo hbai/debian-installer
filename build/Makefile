@@ -124,16 +124,12 @@ define mkinitramfs
   (cd $(TREE) && find . | cpio --quiet -o -H newc) > 
 endef
 
-define mkfs.ufs2
-  fs=`mktemp` ; \
-  dd if=/dev/zero of=$${fs} bs=1M count=20 ; \
-  md=`mdconfig -a -t vnode -f $${fs}` ; \
-  mkfs.ufs -O2 /dev/$${md} ; \
-  mnt=`mktemp -d` ; mount /dev/$${md} $${mnt} ; \
-  cp -a $(TREE)/* $${mnt}/ ; \
-  umount $${mnt} ; rmdir $${mnt} ; \
-  mdconfig -d -u $${md} ; \
-  mv $${fs}
+define mkfs.ufs1
+  fs=`mktemp -d` ; \
+  cp -a $(TREE)/* $${fs}/ ; \
+  tmp=`mktemp -d` ; \
+  makefs -t ffs -s 20m -f 1000 -o version=1 $${tmp}/ufs $${fs}/ ; \
+  mv $${tmp}/ufs
 endef
 
 define e2fsck
@@ -627,8 +623,8 @@ $(TEMP_INITRD): $(STAMPS)tree-$(targetstring)-stamp arch_tree
 	jffs2) \
 		$(mkjffs2) $(TEMP_INITRD); \
 	;; \
-	ufs2) \
-		$(mkfs.ufs2) $(TEMP)/initrd; \
+	ufs1) \
+		$(mkfs.ufs1) $(TEMP)/initrd; \
 		gzip -v9f $(TEMP)/initrd; \
 	;; \
 	*) \
