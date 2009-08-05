@@ -125,11 +125,7 @@ define mkinitramfs
 endef
 
 define mkfs.ufs1
-  fs=`mktemp -d` ; \
-  cp -a $(TREE)/* $${fs}/ ; \
-  tmp=`mktemp -d` ; \
-  makefs -t ffs -s 20m -f 1000 -o version=1 $${tmp}/ufs $${fs}/ ; \
-  mv $${tmp}/ufs
+  sh -c 'makefs -t ffs -s 20m -f 1000 -o version=1 $$0 ${TREE}'
 endef
 
 define e2fsck
