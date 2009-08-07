@@ -163,7 +163,7 @@ Build-Depends: debhelper (>= 4), apt, apt-utils, gnupg, debian-archive-keyring (
 #	- makefs [kfreebsd-i386 kfreebsd-amd64]
 #		Used to create an UFS1 filesystem from a directory tree.
 #	- grub-pc [kfreebsd-i386 kfreebsd-amd64]
-#		Used as the CD-ROM's bootload
+#		Used as the CD-ROM's bootloader
 
 Package: debian-installer
 Architecture: any
