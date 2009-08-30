@@ -17,7 +17,7 @@ give us more space.)
 
 1000 -> 3000 Preparation and installer setup
 1000 localechooser
-1100 load-floppy
+1100 load-media
 1200 kbd-chooser
 1300 iso-scan
      cdrom-detect
@@ -33,6 +33,7 @@ give us more space.)
 2100 network-preseed
      network-console
 2200 ai-choosers
+     clock-setup
 2300 choose-mirror
      download-installer
 2500 lowmem
@@ -40,6 +41,8 @@ give us more space.)
 3000 -> 4000 Disk detection & etc
 3500 disk-detect (!s390)
 3700 s390-dasd (s390)
+
+3900 rescue-mode
 
 4000 -> 5000 Disk preparation
 4200 partman (as default partitioner)
@@ -52,27 +55,22 @@ give us more space.)
 4900 partman (as non-default partitioner [s390])
 5000 autopartkit
 
-6000 -> 7000 Base install
-6200 tzsetup
-     clock-setup
-6300 user-setup
+6000 -> 8000 Base installation and completion of install
 6500 base-installer
-
-7000 -> 8000 Post-base-install
+6900 user-setup
 7000 apt-setup
      pkgsel
 7300 palo-installer (hppa)
-     grub-installer (i386)
      yaboot-installer (powerpc/powermac_newworld, powerpc/chrp*)
      quik-installer (powerpc/powermac_oldworld)
      zipl-installer (s390)
      arcboot-installer (mips)
-     delo-installer (mipsel)
      silo-installer (sparc)
      vmelilo-installer (m68k/vme*)
-     glantank-installer (arm/iop32x)
-7500 lilo-installer (i386)
-7600 elilo-installer (ia64, i386)
+     flash-kernel-installer (armel)
+7400 grub-installer (x86, powerpc/chrp_pegasos)
+7500 lilo-installer (x86)
+7600 elilo-installer (ia64, x86)
 7700 nobootloader (all)
 7800 finish-install
 
@@ -84,3 +82,6 @@ give us more space.)
 94000 baseconfig-udeb
 95000 di-utils-shell
 96000 eject-udeb
+
+99999 dummy menu item for components that should be listed in anna,
+      but not in the main menu
