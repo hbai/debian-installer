@@ -19,7 +19,8 @@ rescue-check
 env-preseed
 pciutils-udeb
 
-# kbsd hack #include "udev"
+#include "udev"
 
 # busybox modutils is gone 
-# kbsd hack module-init-tools-udeb
+module-init-tools-udeb [linux]
+kldutils-udeb [kfreebsd]
