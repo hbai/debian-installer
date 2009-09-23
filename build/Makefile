@@ -62,7 +62,7 @@ DEB_HOST_ARCH = $(shell dpkg-architecture -qDEB_HOST_ARCH)
 DEB_HOST_ARCH_OS = $(shell dpkg-architecture -qDEB_HOST_ARCH_OS)
 DEB_HOST_GNU_CPU = $(shell dpkg-architecture -qDEB_HOST_GNU_CPU)
 DEB_HOST_GNU_SYSTEM = $(shell dpkg-architecture -qDEB_HOST_GNU_SYSTEM)
-export DEB_HOST_ARCH DEB_HOST_GNU_CPU DEB_HOST_GNU_SYSTEM
+export DEB_HOST_ARCH DEB_HOST_ARCH_OS DEB_HOST_GNU_CPU DEB_HOST_GNU_SYSTEM
 endif
 
 # We loop over all needed combinations of ARCH, SUBARCH, MEDIUM, FLAVOUR
@@ -363,7 +363,7 @@ ifdef EXTRAFILES
 	done
 endif
 
-ifeq ($(DEB_HOST_ARCH),linux)
+ifeq ($(DEB_HOST_ARCH_OS),linux)
 ifdef KERNELVERSION
 	# Set up modules.dep, ensure there is at least one standard dir (kernel
 	# in this case), so depmod will use its prune list for archs with no
