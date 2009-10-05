@@ -21,6 +21,8 @@ debian-installer (2009xxxx) UNRELEASED; urgency=low
     Packages files. Despite the above change, apt still seems to want to
     pull in multiple providers of virtual packages, which causes problems
     otherwise.
+  * Clear Dir::Etc::sourceparts in build/util/pkg-list, to match
+    build/util/get-packages.
 
   [ Martin Michlmayr ]
   * Remove support for the old arm port.
@@ -30,8 +32,11 @@ debian-installer (2009xxxx) UNRELEASED; urgency=low
   * Generate images for the D-Link DNS-323 and Conceptronic CH3SNAS,
     thanks Matt Palmer.  Closes: #503040.
   * Use the 2.6.29 kernel on armel, mips and mipsel.
-  * Add images for the Marvell Kirkwood platform, including images for
-    the QNAP TS-119, TS-219 and TS-219P, and SheevaPlug.
+  * Use the 2.6.30-2 kernel on armel.
+  * Add images for the Marvell Kirkwood platform, including support for:
+    - QNAP TS-119, TS-219 and TS-219P
+    - Marvell OpenRD-Base and OpenRD-Client
+    - Marvell SheevaPlug
   * Remove Broadcom SWARM (sb1-bcm91250a) support since since few devices
     remain out there and debian-installer support is likely broken anyway.
   * Remove Broadcom Bigsur (sb1a-bcm91480b) support since debian-installer
