@@ -16,7 +16,7 @@ give us more space.)
 0 -> 1000 Reserved
 
 1000 -> 3000 Preparation and installer setup
-1000 localechooser
+1000 localechooser (!s390)
 1100 load-media
 1200 kbd-chooser
 1300 iso-scan
@@ -32,6 +32,7 @@ give us more space.)
 1900 auto-install
 2100 network-preseed
      network-console
+2110 localechooser (s390)
 2200 ai-choosers
      clock-setup
 2300 choose-mirror
@@ -46,14 +47,12 @@ give us more space.)
 
 4000 -> 5000 Disk preparation
 4200 partman (as default partitioner)
-4300 partitioner (m68k, mips, s390)
-4400 lvmcfg
+4300 partitioner (mips)
+4400 lvmcfg (mips)
 4400 partman (mips)
-4500 partconf (m68k, mips, s390)
-4500 mdconfig
+4500 partconf (mips)
+4500 mdcfg (mips)
 4700 evms
-4900 partman (as non-default partitioner [s390])
-5000 autopartkit
 
 6000 -> 8000 Base installation and completion of install
 6500 base-installer

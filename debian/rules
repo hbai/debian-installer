@@ -6,8 +6,13 @@ DATE=$(shell echo $(VERSION) | cut -d '.' -f 1)
 SUITE=$(shell LC_ALL=C dpkg-parsechangelog | grep ^Distribution: | cut -d ' ' -f 2)
 ifeq (${SUITE},UNRELEASED)
 USE_UDEBS_FROM=unstable
+TRANSSTATUS=
+BOOTMENU_BEEP=n
 else
-USE_UDEBS_FROM=lenny
+USE_UDEBS_FROM=squeeze
+USE_PROPOSED_UPDATES=0
+TRANSSTATUS=translation-status
+BOOTMENU_BEEP=y
 endif
 
 ARCHIVEDIR=debian/tmp/installer-$(ARCH)
@@ -21,15 +26,18 @@ clean:
 	dh_clean build-stamp
 	$(MAKE) -C build reallyclean
 	$(MAKE) -C doc/devel/partman clean
+	$(MAKE) -C doc/devel/internals clean
 
 # Must run as root, so is not run as part of regular build.
 build-images:
 	$(MAKE) -C build all_build stats release \
-		USE_UDEBS_FROM=$(USE_UDEBS_FROM) BUILD_DATE=$(DATE)
+		USE_UDEBS_FROM=$(USE_UDEBS_FROM) BUILD_DATE=$(DATE) \
+		TRANSSTATUS=$(TRANSSTATUS) BOOTMENU_BEEP=$(BOOTMENU_BEEP)
 	
 build: build-stamp
 build-stamp:
 	rm -f $@
+	$(MAKE) -C doc/devel/internals
 	$(MAKE) -C doc/devel/partman
 	touch $@
 
@@ -49,10 +57,12 @@ binary-arch: install
 	dh_testdir
 	dh_testroot
 	dh_installchangelogs
-	dh_installdocs doc/* -X Makefile -X partman-doc.sgml
+	dh_installdocs doc/* -X Makefile -X build.sh -X .xsl \
+		-X internals.xml -X partman-doc.sgml
 	dh_compress
 	dh_fixperms
 	dh_gencontrol
+	dh_md5sums
 	dh_builddeb
 	cd debian/tmp && tar czvf ../../../$(TARNAME) .
 	dpkg-distaddfile $(TARNAME) raw-installer -

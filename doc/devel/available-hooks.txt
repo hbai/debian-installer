@@ -12,22 +12,26 @@ This list is probably incomplete.
     List of packages (udebs) to install or not install in into the d-i
     ramdisk.
 
-/etc/autopartkit.d/*.table [autopartkit]
-    Partition table instructions for autopartkit. The selection is
-    done using debconf.
-
 /cdrom/.disk/base_include [base-installer]
 /cdrom/.disk/base_exclude
     The content of these files are taken as lists of packages to
     install or not into the target area.
 
 /usr/lib/base-installer.d/* [base-installer]
-    The files in this directory are executed in sequence before
-    debootstrap is called.
+    The files in this directory are executed in sequence after the base
+    system has been bootstrapped (generally by debootstrap), but before
+    the system is used in any way.
 
 /usr/lib/post-base-installer.d/* [base-installer]
-    The files in this directory are executed in sequence after
-    debootstrap is called.
+    The files in this directory are executed in sequence after debootstrap
+    is called (or whatever is used to bootstrap the base system). 
+
+/usr/lib/pre-pkgsel.d/* [pkgsel]
+    The files in this directory are executed in sequence before tasksel
+    is called in the /target environment. Example usage: install custom
+    tasks (tasksel-data) from source added during apt-setup.
+    Using the installation CD and thus installing udebs is not possible
+    in these scripts (but should also not be needed).
 
 /usr/lib/finish-install.d/* [finish-install]
     The files in this directory are executed in sequence at the end of
