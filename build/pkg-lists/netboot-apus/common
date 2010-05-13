@@ -3,12 +3,11 @@
 
 # Other udebs that are needed for netboot install
 localechooser
-auto-install
-ai-choosers
 choose-mirror
 net-retriever
 download-installer
 cdebconf-newt-udeb
+cdebconf-newt-terminal ?
 installation-locale
 di-utils-terminfo
 

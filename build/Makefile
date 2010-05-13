@@ -95,6 +95,7 @@ include config/dir
 
 export KEYRING
 export KERNELVERSION
+export LOCALUDEBDIR
 
 ifneq ($(shell id -u),0)
   ROOTCMD ?= fakeroot
@@ -183,7 +184,7 @@ flavour_validate:
 	@set -e; \
 	FLAVOUR= var="$(strip $(patsubst $(MEDIUM)%,%,$(var)))"; \
 	tmp=$$(echo $$var |sed 's/[ ].*$$//'); \
-	[ -z '$(FLAVOUR_SUPPORTED)$(FLAVOUR_SUPPORTED_EXTRA)' ] || [ -z "$$tmp" ] || [ -z "$$(echo $(FLAVOUR_SUPPORTED) $(FLAVOUR_SUPPORTED_EXTRA) |grep -w $$tmp)" ] || FLAVOUR=$$tmp; \
+	[ -z '$(FLAVOUR_SUPPORTED)$(FLAVOUR_SUPPORTED_EXTRA)' ] || [ -z "$$tmp" ] || [ -z "$$(echo $(FLAVOUR_SUPPORTED) $(FLAVOUR_SUPPORTED_EXTRA) | grep -w $$tmp)" ] || FLAVOUR=$$tmp; \
 	$(submake) finish_validate FLAVOUR=$$FLAVOUR var="$$var"
 
 .PHONY: finish_validate
@@ -283,6 +284,7 @@ release:
 # The general tree target.
 $(STAMPS)tree-unpack-$(targetstring)-stamp: $(STAMPS)get_udebs-$(targetstring)-stamp
 	dh_testroot
+	@[ -d ../debian ] || { echo "directory '../debian' not found; complete source of 'debian-installer' package is required"; false; }
 	cd .. && dpkg-checkbuilddeps
 	@rm -f $@
 
@@ -476,11 +478,13 @@ ifndef ONLY_KLIBC
 	-cp -a `find $(EXTRAUDEBSDIR)/lib -name '*.so.*'` $(TEMP)/udeblibs
 	-cp -a `find $(TREE)/lib -name '*.so.*'` $(TEMP)/udeblibs
 	mkdir -p $(TREE)/lib
+	# HACK ALERT: X.Org modules are excluded from the scan as mklibs
+	# is unable to find symbols provided by the /usr/bin/Xorg binary
 	$(MKLIBS) -L $(TREE)/usr/lib -L $(TEMP)/udeblibs -v -d $(TREE)/lib --root=$(TREE) \
 		-L $(TREE)/usr/lib/cdebconf/frontend \
 		$(addprefix -l,$(notdir $(wildcard $(TREE)/usr/lib/cdebconf/frontend/*.so))) \
-		`find $(TEMP) -type f -a \( -perm +0111 -o -name '*.so' -o -name '*.so.*' \) | grep -v udeblibs`
-	rm -rf $(TEMP)/udeblibs
+		`find $(TEMP) -type f -a \( -perm +0111 -o -name '*.so' -o -name '*.so.*' \) | \
+		 grep -v udeblibs | grep -v 'usr/lib/xorg/modules/.*\.so'`
 endif
 
 	# Add missing symlinks for libraries
@@ -512,15 +516,41 @@ ifdef OMIT_DPKG
 	rm -rf $(DPKGDIR)
 endif
 
-ifdef DROP_LANG
-	# Remove languages from the templates.
-	# Not ideal, but useful if you're very tight on space.
-	set -e; \
+define drop_lang
+	@echo "Dropping languages: $(1)"
+	@set -e; \
 	for FILE in $$(find $(TREE)/var/lib/dpkg -name "*.templates"); do \
-		perl -e 'my $$status=0; my $$drop=shift; while (<>) { if (/^[A-Z]/ || /^$$/) { if (/^(Choices|Description|Indices|Default)-($$drop)/ && ! /^Choices-C:/) { $$status = 0 } else { $$status = 1 } } print if ($$status); }' ${DROP_LANG} < $$FILE > temp; \
+		perl -e 'my $$status=0; my $$drop=shift; while (<>) { if (/^[A-Z]/ || /^$$/) { if (/^(Choices|Description|Indices|Default)-($$drop)/ && ! /^Choices-C:/) { $$status = 0 } else { $$status = 1 } } print if ($$status); }' $(1) < $$FILE > temp; \
 		mv temp $$FILE; \
 	done
+endef
+
+ifndef KEEP_GI_LANGS
+	# It makes no sense to include languages only supported by the
+	# graphical installer in regular images. This will also ensure
+	# their glyphs don't get included a bit lower down.
+	$(call drop_lang,$(GI_LANGS))
 endif
+
+ifdef DROP_LANG
+	# Remove selected languages from the templates.
+	# Not ideal, but useful if you're very tight on space.
+	$(call drop_lang,$(DROP_LANG))
+endif
+
+	# Collect the used UTF-8 strings, to know which glyphs to include in
+	# the font.
+	cat needed-characters/*.utf > $(TEMP)/all.utf
+	if [ -n "`find $(EXTRAUDEBSDPKGDIR)/info/ -name \\*.templates`" ]; then \
+		cat $(EXTRAUDEBSDPKGDIR)/info/*.templates >> $(TEMP)/all.utf; \
+	fi
+	if [ -n "`find $(DPKGDIR)/info/ -name \\*.templates`" ]; then \
+		cat $(DPKGDIR)/info/*.templates >> $(TEMP)/all.utf; \
+	fi
+	if [ -f $(TREE)/usr/share/localechooser/languagelist.data.gz ]; then \
+		zcat $(TREE)/usr/share/localechooser/languagelist.data.gz >> $(TEMP)/all.utf; \
+	fi
+
 
 	# Strip all kernel modules, just in case they haven't already been
 	set -e; \
@@ -539,16 +569,6 @@ endif
 		rm $$file; \
 	done
 	rm -rf $(TREE)/var/lib/dpkg/triggers
-
-	# Collect the used UTF-8 strings, to know which glyphs to include in
-	# the font.
-	cat needed-characters/*.utf > $(TEMP)/all.utf
-	if [ -n "`find $(EXTRAUDEBSDPKGDIR)/info/ -name \\*.templates`" ]; then \
-		cat $(EXTRAUDEBSDPKGDIR)/info/*.templates >> $(TEMP)/all.utf; \
-	fi
-	if [ -n "`find $(DPKGDIR)/info/ -name \\*.templates`" ]; then \
-		cat $(DPKGDIR)/info/*.templates >> $(TEMP)/all.utf; \
-	fi
 
 	# Remove extra udebs now that we're done with them.
 	rm -rf $(EXTRAUDEBSDIR)
@@ -609,6 +629,15 @@ $(TREE)/lib/unifont.bgf: $(TEMP)/all.utf
 
 # Create a compressed image of the root filesystem.
 $(TEMP_INITRD): $(STAMPS)tree-$(targetstring)-stamp arch_tree
+	# Check for lost file attributes
+	@if [ -e $(TREE)/dev/console ] && \
+	    ! ls -l $(TREE)/dev/console | grep -q "^c"; then \
+		echo "Error: incorrect file attributes detected in initrd tree."; \
+		echo "Did you restart a (failed) fakeroot build?"; \
+		echo "See fakeroot(1) ('-s' and '-i' options) for additional information."; \
+		exit 1; \
+	fi
+
 	# Only build the font if we have installation-locale
 	if [ -d "$(LOCALE_PATH)/C.UTF-8" ] && [ -e /usr/src/unifont.bdf ]; then \
 		$(submake) $(TREE)/lib/unifont.bgf; \

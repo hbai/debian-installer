@@ -1,4 +1,76 @@
-debian-installer (2009xxxx) UNRELEASED; urgency=low
+debian-installer (2010xxxx) UNRELEASED; urgency=low
+
+  [ Theppitak Karoonboonyanan ]
+  * Add needed characters for Thai.
+
+  [ Christian Perrier ]
+  * Remove Thai from the list of languages only supported with the
+    graphical cdebconf frontend.
+
+  [ Frans Pop ]
+  * sparc: add components needed to load firmware for netboot images.
+  * Update pkg-lists for changes in auto-install (1.7). Main benefit is that
+    netcfg will no longer get pulled in on images that shouldn't have it.
+  * ia64: add support for loading firmware to images. Closes: #572724.
+  * Fix building with alternative LOCALUDEBDIR.
+  * Ensure glyphs used in the translated right column of localechooser are
+    included in images to avoid incomplete display of the languagelist when
+    some translations are dropped through DROP_LANG.
+  * Drop auto-install from pkg-lists now that it has been integrated in
+    the preseed udebs.
+
+  [ Otavio Salvador ]
+  * Switch amd64, i386, hppa, powerpc, mipsel, s390, ia64, mips, sparc to
+    2.6.32.
+
+  [ Martin Michlmayr ]
+  * Switch armel to 2.6.32.
+  * QNAP: make the check for a valid MAC address more reliable.
+  * QNAP: add a check to ensure that the right installer files for the
+    user's QNAP model are used.
+  * OpenRD-Base and OpenRD-Client can use the same image, so provide
+    only one generic image for OpenRD.
+
+  [ Cyril Brulebois ]
+  * Warn if only the 'build' directory has been checked out instead of the
+    full source of the 'debian-installer' package.
+
+  [ Cyril Brulebois / Frans Pop ]
+  * Switch graphical installer from DirectFb to X.Org backend
+    - include xserver-xorg udebs for G-I images
+    - use console-setup instead of kbd-chooser for G-I images
+    - exclude X.Org modules from library reduction
+    - stop including libgcc_s.so.1 in G-I images; it's not needed with X.Org
+  * Enable graphical installer build targets again. With many thanks to
+    Cyril Brulebois, Julien Cristau and others who have contributed to
+    implementing the X.Org backend.
+
+  [ Frans Pop ]
+  * G-I: include gtk2-engines-udeb through pkg-lists.
+  * Add check for incorrect file attributes on device nodes, which can occur
+    when using fakeroot after restarting a (failed) build.
+  * x86: update info about disabling framebuffer in F8 syslinux help screen.
+
+ -- Christian Perrier <bubulle@debian.org>  Sun, 14 Feb 2010 17:06:27 +0100
+
+debian-installer (20100211) unstable; urgency=low
+
+  [ Frans Pop ]
+  * Major update of Debian Installer Internals document.
+  * Move menu-item-numbers.txt and available-hooks.txt to D-I Internals.
+  * Exclude localechooser, kbd-chooser and auto-install for all installs
+    of type network-console.
+  * armel/orion5x: drop some additional languages as the image is too large.
+  * Drop languages only supported in graphical installer by default and only
+    keep them for targets that build graphical installer images.
+
+  [ Otavio Salvador ]
+  * Do not list dhcp3-client-udeb in pkg-lists since it is added, when
+    needed, as dependency in netcfg.
+
+ -- Otavio Salvador <otavio@ossystems.com.br>  Thu, 11 Feb 2010 18:03:22 -0200
+
+debian-installer (20100122) unstable; urgency=low
 
   [ Otavio Salvador ]
   * debian/copyright: clarify it is licensed in GPL 2 or later.
@@ -13,13 +85,22 @@ debian-installer (2009xxxx) UNRELEASED; urgency=low
   * Bump debhelper compat to 6; bump Standards-Version to 3.8.3.
   * gen-sources.list.udeb: also use any mirrors defined in files in the
     /etc/apt/sources.list.d directory; /etc/apt/sources.list can be empty.
+  * gen-sources.list.udeb: allow for multiple spaces and tabs in a source line.
   * Remove unused references to socket-modules from pkg-lists.
+  * Drop no longer needed versioned build dependency on dpkg.
 
   [ Aurelien Jarno ]
   * Build GNU/kFreeBSD images using grub-mkrescue instead of grub-image, 
     using patch from Robert Millan.
 
- -- Frans Pop <fjp@debian.org>  Fri, 25 Dec 2009 06:43:03 +0100
+  [ Samuel Thibault ]
+  * Add hurd-i386 configuration files.
+  * Add mtools, win32-loader, and grub-pc build-dependency on hurd-i386 too.
+
+  [ Colin Watson ]
+  * Upgrade to debhelper v7.
+
+ -- Otavio Salvador <otavio@debian.org>  Fri, 22 Jan 2010 17:58:49 -0200
 
 debian-installer (20091215) unstable; urgency=low
 

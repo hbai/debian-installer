@@ -2,6 +2,18 @@
 libnss-files-udeb
 rootskel-gtk
 cdebconf-gtk-udeb
+cdebconf-gtk-terminal
+
+xserver-xorg-core-udeb
+xserver-xorg-input-evdev-udeb
+xserver-xorg-video-fbdev-udeb
+gtk2-engines-udeb
+
+# Use console-setup instead of kbd-chooser
+console-setup-udeb
+console-setup-pc-ekmap
+kbd-chooser -
+console-keymaps-at -
 
 ttf-freefont-udeb
 ttf-farsiweb-udeb
@@ -12,4 +24,4 @@ ttf-khmeros-udeb
 ttf-thai-tlwg-udeb
 ttf-tamil-fonts-udeb
 ttf-malayalam-fonts-udeb
-ttf-bpg-georgian-fonts-udeb
+ttf-sil-abyssinica-udeb
