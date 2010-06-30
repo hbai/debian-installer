@@ -11,16 +11,8 @@ Contents
 </title>
 
 <para>
-Level 1 consists of all "core" &d-i; packages, i.e. all packages with
-translatable material in the &d-i; development tree. These packages
-are used during the installation "first stage".
-</para>
-
-<para>
-In &d-i; jargon, the <emphasis>first stage</emphasis> is the part of
-&d-i; which occurs from the initial boot up to the first (and only)
-reboot of the system. All user interactions screens shown to users
-during this stage are part of the first level for l10n.
+Level 1 consists of all <quote>core</quote> &d-i; packages, i.e. all packages with
+translatable material in the &d-i; development tree.
 </para>
 
 <para>
@@ -36,11 +28,53 @@ translations.
 </para>
 
 <para>
-In order to make the translators work easy and simple, all
-translatable strings are assembled in a single file. Translators must
-work on this file and not on the various files dispersed in the &d-i;
-development tree (these files are automatically generated).
+Level 1 is the key for a language being fully integrated in &d-i;.
+A language will be <emphasis>activated</emphasis> by &i18n-coords; only when the first two sublevels are completely translated.
 </para>
+
+</sect2>
+
+<sect2 id="sublevels">
+<title>
+Sublevels
+</title>
+
+<para>
+In the past, all &d-i; level 1 strings were gathered into a single <quote>master</quote> file. While that was easy to manage, it had the inconvenience of grouping very important and often used strings with very obscure strings that are relevant for some architectures only, or some special (and rarely used) features.
+</para>
+
+<para>
+In order for translators to better prioritize their work, this master file has been split into five <quote>sublevel</quote> files:
+</para>
+
+<itemizedlist>
+  <listitem>
+    <para>
+      Sublevel 1: strings used for default installs on common architectures
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      Sublevel 2: general strings not used during default installs. Includes error messages and dialogs
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      Sublevel 3: expert strings (some low priority features such as RAID, encrypted partitions, etc.)
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      Sublevel 4: specific to less-popular arches (powerpc, mips, sparc) or used in experimental features
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      Sublevel 5: same for high-end (hppa, ia64, s390) and hobby (m68k) arches and old stuff (partconf,
++partitioner, that are replaced by partman for a while)
+    </para>
+  </listitem>
+</itemizedlist>
 
 </sect2>
 
@@ -57,7 +91,7 @@ this is the only way for them to commit their own translations.
 <itemizedlist>
   <listitem>
     <para>
-      <acronym>SVN</acronym> access: &svn-level1;
+      <acronym>SVN</acronym> access: &svn-level1;. Sublevel files are in directories named <filename>sublevelX</filename>
     </para>
   </listitem>
   <listitem>
@@ -67,12 +101,52 @@ this is the only way for them to commit their own translations.
     <itemizedlist>
       <listitem>
         <para>
-          &url-level1-pot-link;
+          &url-sublevel1-pot-link;
         </para>
       </listitem>
       <listitem>
         <para>
-          &url-level1-po-link;
+          &url-sublevel1-po-link;
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          &url-sublevel2-pot-link;
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          &url-sublevel2-po-link;
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          &url-sublevel3-pot-link;
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          &url-sublevel3-po-link;
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          &url-sublevel4-pot-link;
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          &url-sublevel4-po-link;
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          &url-sublevel5-pot-link;
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          &url-sublevel5-po-link;
         </para>
       </listitem>
     </itemizedlist>
@@ -81,11 +155,11 @@ this is the only way for them to commit their own translations.
 
 
 <para>
-To begin the translation work for level 1, translators should copy the
-<filename>packages/po/template.pot</filename> to
+To begin the translation work for sublevel 1, translators should copy the
+<filename>packages/po/sublevel1/template.pot</filename> to
 <filename>&language;.po</filename> (where &language; is
 the ISO-639 code of the language, see <xref
-linkend="language-codes"/>) and complete this file.
+linkend="language-codes"/>) and complete this file. The same stands for other sublevels.
 </para>
 
 </sect2>
@@ -105,6 +179,17 @@ package (see <xref linkend="bug-reports"/> for details).
 
 </sect2>
 
+<sect2>
+<title>
+Prioritizing work
+</title>
+
+<para>
+Translators should read <xref linkend="prioritizing"/>
+to choose the best priority order for their work on sublevels.
+</para>
+
+</sect2>
 <sect2>
 <title>
 Specific recommendations
@@ -147,13 +232,13 @@ This script will output the offending line(s) number(s) as well as the number of
 
 <sect3>
 <title>
-"Choose language" menu entry
+<quote>Choose language</quote> menu entry
 </title>
 
 <para>
 This entry is the language selection screen entry for each
-language. Translators can translate it but they should keep "Choose
-language" in English as an alternative so that users mistakenly
+language. Translators can translate it but they should keep <quote>Choose
+language</quote> in English as an alternative so that users mistakenly
 choosing a language can still find the appropriate entry to change it
 back to their own language.
 </para>
@@ -167,11 +252,11 @@ Main menu entries
 
 <para>
 Most &d-i; packages have a main menu entry, which is the text that appears
-in the &d-i; main menu to allow users to select the orresponding action.
+in the &d-i; main menu to allow users to select the corresponding action.
 </para>
 
 <para>
-The length of this main menu entry is limited to 58 columns, ie 58 characters
+The length of this main menu entry is limited to 58 columns, i.e. 58 characters
 for single-width languages and only 29 characters for double-width languages.
 These main menu entries all have a comment with <quote>Main menu item</quote> in the PO and POT files.
 </para>
@@ -184,22 +269,22 @@ Variable names
 </title>
 
 <para>
-Many places in &d-i; use variables (e.g. "${LOCALE} is currently not
-supported in Debian"). The variable names should <emphasis>not be
+Many places in &d-i; use variables (e.g. <quote>${LOCALE} is currently not
+supported in Debian</quote>). The variable names should <emphasis>not be
 translated</emphasis> and be kept inside braces prepended by the
 dollar sign in the translation.
 </para>
 
 <para>
-This constraint is checked by the spell checking scripts which report
+This constraint is checked by the spell checking scripts, which report
 these errors separately (see <xref linkend="spellchecking"/> for
 details about the spell checking scripts).
 </para>
 
 <para>
-Advanced translation software such as <command>kbabel</command> are
-able to visually display such errors and warn about them before saving
-files.
+Advanced translation software such as <command>kbabel</command> (renamed
+to <command>lokalize</command> in KDE4) are able to visually display such
+errors and warn about them before saving files.
 </para>
 
 </sect3>
@@ -210,7 +295,7 @@ Choices entries
 </title>
 
 <para>
-Several entries in PO files are unsplitted choices list such as:
+Several entries in PO files are unsplit choices lists such as:
 </para>
 
 <informalexample>
@@ -226,7 +311,7 @@ msgstr ""
 <para>
 For these translations, translators should take care of separating all
 choices with a normal comma sign, even if commas are not used in their
-language. Only standard commas should be used and not special commans
+language. Only standard commas should be used and not special commas
 such as those used by the Arabic language.
 </para>
 
@@ -277,7 +362,7 @@ is intended to setup the default Debian archive mirror country,
 depending on the language. Translators should put there the ISO-3166
 code of the country to be used as default, most often their own
 country name, or the country their language is spoken in. For
-instance, the Brazilian Portuguese translator will use "BR" as
+instance, the Brazilian Portuguese translator will use <quote>BR</quote> as
 translation there, as this is the ISO-3166 code for Brazil.
 </para>
 
