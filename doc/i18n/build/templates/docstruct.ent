@@ -18,12 +18,12 @@
 <!ENTITY status-pages.xml      SYSTEM "##SRCPATH##/technical/status-pages.xml">
 <!ENTITY supported-languages.xml      SYSTEM "##SRCPATH##/technical/supported-languages.xml">
 <!ENTITY prospective-languages.xml      SYSTEM "##SRCPATH##/technical/prospective-languages.xml">
+<!ENTITY active-languages.xml      SYSTEM "##SRCPATH##/technical/active-languages.xml">
 <!ENTITY synchronization.xml      SYSTEM "##SRCPATH##/technical/synchronization.xml">
 
 <!ENTITY manual.xml      SYSTEM "##SRCPATH##/manual.xml">
 <!ENTITY spellchecking.xml      SYSTEM "##SRCPATH##/spellchecking.xml">
 <!ENTITY language-tasks.xml      SYSTEM "##SRCPATH##/language-tasks.xml">
-<!ENTITY localization-config.xml      SYSTEM "##SRCPATH##/localization-config.xml">
 
 
 <!ENTITY gpl.xml              SYSTEM "##SRCPATH##/appendix/gpl.xml">
