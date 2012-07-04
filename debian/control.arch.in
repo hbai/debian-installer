@@ -1,0 +1,9 @@
+Package: debian-installer-##MAJORVERSION##-netboot-##ARCH##
+Architecture: all
+Depends: ${misc:Depends}
+Provides: debian-installer-netboot-##ARCH##, debian-installer-netboot
+Suggests: tftpd-hpa
+Description: Debian-installer network boot images for ##ARCH##
+ This package contains images of the Debian Installer for the ##ARCH##
+ architecture.
+

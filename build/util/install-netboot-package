@@ -1,0 +1,48 @@
+#!/bin/sh
+
+set -e
+
+ARCHITECTURE=$1
+MAJORVERSION=$2
+
+DESTDIR=$PWD/debian/debian-installer-$MAJORVERSION-netboot-$ARCHITECTURE/usr/lib/debian-installer/images
+BASEDIR=$PWD/build/dest/
+NETBOOT_TXT_SRC=$BASEDIR/netboot/netboot.tar.gz
+NETBOOT_GTK_SRC=$BASEDIR/netboot/gtk/netboot.tar.gz
+
+unpack_installer () {
+	DIRECTORY=$1
+	FILE=$2
+
+	cd ../$(dirname $DIRECTORY)
+	mkdir -p $(basename $DIRECTORY)
+	tar xaf $FILE -C $(basename $DIRECTORY)
+
+        cd $DESTDIR/$DIRECTORY
+
+        # amd64 i386
+        if [ -e pxelinux.0 ]; then
+                rm -f pxelinux.0 pxelinux.cfg
+                mv debian-installer/*/* ./
+                rm -rf debian-installer
+        fi
+}
+
+mkdir -p $DESTDIR/$ARCHITECTURE
+
+if [ -r $NETBOOT_TXT_SRC ]; then
+	cd $DESTDIR/$ARCHITECTURE
+	unpack_installer $ARCHITECTURE/text $NETBOOT_TXT_SRC
+
+	if [ -r $NETBOOT_GTK_SRC ]; then
+		cd $DESTDIR/$ARCHITECTURE
+		unpack_installer $ARCHITECTURE/gtk $NETBOOT_GTK_SRC
+	fi
+else
+	FILES=$(awk '/netboot/ { print $1 }' $BASEDIR/MANIFEST | grep -v mini.iso)
+
+	for FILE in $FILES; do
+		mkdir -p $(dirname $FILE | sed -e 's|netboot/||')
+		cp $BASEDIR/$FILE $(echo $FILE | sed -e 's|netboot/||')
+	done
+fi

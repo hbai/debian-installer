@@ -20,10 +20,15 @@ DESTDIR=$(ARCHIVEDIR)/$(DATE)
 IMAGEDIR=$(DESTDIR)/images
 TARNAME=debian-installer-images_$(VERSION)_$(ARCH).tar.gz
 
+# Don't forget to recreate debian/control after editing these lines: $ debian/rules debian/control
+NETBOOT_PACKAGE_MAJORVERSION = 7.0
+NETBOOT_PACKAGE_ARCHITECTURES = amd64 armel armhf i386 ia64 kfreebsd-amd64 kfreebsd-i386 mips mipsel powerpc sparc
+
 clean:
 	dh_testdir
 	dh_testroot
 	dh_clean
+	rm -f debian/debian-installer-*-netboot-*.lintian-overrides
 	$(MAKE) -C build reallyclean
 	$(MAKE) -C doc/devel/partman clean
 	$(MAKE) -C doc/devel/internals clean
@@ -60,6 +65,11 @@ binary-arch: install
 	dh_installchangelogs
 	dh_installdocs doc/* -X Makefile -X build.sh -X .xsl \
 		-X internals.xml -X partman-doc.sgml
+ifneq (,$(filter $(ARCH), $(NETBOOT_PACKAGE_ARCHITECTURES)))
+	sed -e 's/##IDENTIFIER##/$*/g' debian/lintian-overrides.in > debian/debian-installer-$(NETBOOT_PACKAGE_MAJORVERSION)-netboot-$(ARCH).lintian-overrides
+	dh_lintian
+	./build/util/install-netboot-package $(ARCH) $(NETBOOT_PACKAGE_MAJORVERSION)
+endif
 	dh_compress
 	dh_fixperms
 
@@ -67,11 +77,27 @@ binary-arch: install
 
 	dh_gencontrol
 	dh_md5sums
-	dh_builddeb
+	dh_builddeb -pdebian-installer
+ifneq (,$(filter $(ARCH), $(NETBOOT_PACKAGE_ARCHITECTURES)))
+	dh_builddeb -pdebian-installer-$(NETBOOT_PACKAGE_MAJORVERSION)-netboot-$(ARCH)
+endif
 	cd debian/tmp && tar czvf ../../../$(TARNAME) .
 	dpkg-distaddfile $(TARNAME) raw-installer -
 
 binary-indep:
 
+debian/control: debian/control.in debian/control.arch.in
+	echo "###############################################" > $@
+	echo "### /!\ FILE GENERATED FROM control.in      ###" >> $@
+	echo "### Edits shall happen in debian/control.in ###" >> $@
+	echo "### Re-generate this file with:             ###" >> $@
+	echo "### $$ debian/rules debian/control           ###" >> $@
+	echo "###############################################" >> $@
+	cat $< >> $@
+	set -e;\
+	for i in ${NETBOOT_PACKAGE_ARCHITECTURES}; do \
+		sed -e 's/##MAJORVERSION##/${NETBOOT_PACKAGE_MAJORVERSION}/g' -e "s/##ARCH##/$$i/g" debian/control.arch.in ;\
+	done >> $@
+
 binary: binary-indep binary-arch 
-.PHONY: build build-images clean binary-indep binary-arch binary install 
+.PHONY: build build-images clean binary-indep binary-arch binary install debian/control

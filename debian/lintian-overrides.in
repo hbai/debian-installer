@@ -1,0 +1,4 @@
+debian-installer-##IDENTIFIER##: arch-independent-package-contains-binary-or-object
+debian-installer-##IDENTIFIER##: image-file-in-usr-lib
+debian-installer-##IDENTIFIER##: statically-linked-binary
+debian-installer-##IDENTIFIER##: unstripped-binary-or-object
