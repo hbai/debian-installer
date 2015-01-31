@@ -647,7 +647,7 @@ sources.list.udeb:
 	if [ "$(MIRROR)x" != "x" ]; then \
 		echo "deb $(MIRROR) $(USE_UDEBS_FROM) $(UDEB_COMPONENTS)"; \
 	else \
-		gen-sources.list.udeb "$(SYSTEM_SOURCES_LIST)" $(USE_UDEBS_FROM) $(UDEB_COMPONENTS) $(USE_PROPOSED_UPDATES); \
+		gen-sources.list.udeb $(USE_UDEBS_FROM) $(UDEB_COMPONENTS) $(USE_PROPOSED_UPDATES); \
 	fi) > $@
 	@if [ -e $@.local ]; then \
 		echo "Using $@.local:"; \
