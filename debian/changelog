@@ -9,6 +9,7 @@ debian-installer (2018XXXX) UNRELEASED; urgency=medium
   [ Cyril Brulebois (DEBAMAX) ]
   * Prepare building d-i with bits from backports. Based on:
     https://lists.debian.org/debian-boot/2014/01/msg00407.html
+  * debian/rules: Improve readability.
 
  -- Cyril Brulebois <kibi@debian.org>  Tue, 26 Dec 2017 15:10:47 +0100
 
