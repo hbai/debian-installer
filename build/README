@@ -368,6 +368,7 @@ USE_BACKPORTS_FROM
   building an image. The resulting image should be able to install some
   components from backports (e.g. a newer kernel). Defaults to an empty string
   meaning no backports support.
+  Included in /etc/udebs-backports-source in most initrds.
 
 OMIT_RELEASE_INFO
   Can be used to suppress the inclusion of the files /etc/default-release and
