@@ -22,6 +22,9 @@ debian-installer (2018XXXX) UNRELEASED; urgency=medium
     (instead of the base suite). Source packages are specified, for
     brevity (hello, linux!).
 
+  [ Cyril Brulebois (DEBAMAX) ]
+  * Build against stretch, using stretch and stretch-pu udebs.
+
  -- Cyril Brulebois <kibi@debian.org>  Tue, 26 Dec 2017 15:10:47 +0100
 
 debian-installer (20171204) unstable; urgency=medium
