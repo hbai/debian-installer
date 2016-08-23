@@ -8,21 +8,21 @@ SUITE=$(shell LC_ALL=C dpkg-parsechangelog | grep ^Distribution: | cut -d ' ' -f
 
 # Daily builds vs. uploads to unstable:
 ifeq (${SUITE},UNRELEASED)
-USE_UDEBS_FROM=unstable
-TRANSSTATUS=
-BOOTMENU_BEEP=n
+	USE_UDEBS_FROM=unstable
+	TRANSSTATUS=
+	BOOTMENU_BEEP=n
 else
-USE_UDEBS_FROM=buster
-USE_PROPOSED_UPDATES=0
-TRANSSTATUS=translation-status
-BOOTMENU_BEEP=y
+	USE_UDEBS_FROM=buster
+	USE_PROPOSED_UPDATES=0
+	TRANSSTATUS=translation-status
+	BOOTMENU_BEEP=y
 endif
 
 # Adjust for non-released ports if needed:
 RELEASE_ARCHES=amd64 arm64 armel armhf i386 mips mips64el mipsel ppc64el s390x
 ifeq (,$(filter $(ARCH), $(RELEASE_ARCHES)))
-USE_UNRELEASED=1
-USE_UDEBS_FROM=unstable
+	USE_UNRELEASED=1
+	USE_UDEBS_FROM=unstable
 endif
 
 ARCHIVEDIR=debian/tmp/installer-$(ARCH)
