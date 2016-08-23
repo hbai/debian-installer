@@ -315,6 +315,7 @@ debian-installer (20160630~bpo8+1) jessie-backports; urgency=medium
   * Automatically enable backports support if the target distribution ends
     with “-backports”; generate /etc/udebs-backports-source to use from
     most initrds.
+  * Target jessie, and enable p-u accordingly.
 
  -- Cyril Brulebois <cyril@debamax.com>  Tue, 23 Aug 2016 19:03:38 +0200
 
