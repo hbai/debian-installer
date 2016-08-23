@@ -318,6 +318,8 @@ debian-installer (20160630~bpo8+1) jessie-backports; urgency=medium
   * Target jessie, and enable p-u accordingly.
   * Set linux ABI to 4.6.0-0.bpo.1 (jessie-backports) instead of 4.6.0-1
     (stretch).
+  * Revert "Replace ttf-cjk-compact-udeb with fonts-android-udeb" for the
+    upload targetting jessie.
 
  -- Cyril Brulebois <cyril@debamax.com>  Tue, 23 Aug 2016 19:03:38 +0200
 
