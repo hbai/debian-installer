@@ -26,6 +26,9 @@ debian-installer (20180622) UNRELEASED; urgency=medium
     gen-sources.list.udeb script.
   * Add support for a new USE_UDEBS_BACKPORTS_FROM variable, which can be used
     to set an extra entry in sources.list
+  * When USE_UDEBS_BACKPORTS_FROM is set, generate /etc/udebs-backports-source
+    so that the running d-i knows that backports support is requested. This
+    can affect net-retriever, apt-setup, base-installer.
 
  -- Andreas B. Mundt <andi@debian.org>  Fri, 22 Jun 2018 17:25:42 +0200
 
