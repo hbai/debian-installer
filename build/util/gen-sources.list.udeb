@@ -8,7 +8,7 @@ NL="
 SOURCES_LIST=$1
 SUITE=$2
 UDEB_COMPONENTS=$3
-USE_PROPOSED_UPDATES=$4 # optional
+USE_PROPOSED_UPDATES=$4
 
 # Set to 1 or 2 to see increasing debug info about mirror tests
 # Use 0 for quiet (normal) operation

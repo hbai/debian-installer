@@ -21,6 +21,9 @@ debian-installer (20180622) UNRELEASED; urgency=medium
   * Prepare building d-i with bits from backports. Based on:
     https://lists.debian.org/debian-boot/2014/01/msg00407.html
   * debian/rules: Improve readability.
+  * config/common: Add “USE_PROPOSED_UPDATES ?= 0”. Having an explicit
+    default setting makes it possible to pass extra parameters to the
+    gen-sources.list.udeb script.
 
  -- Andreas B. Mundt <andi@debian.org>  Fri, 22 Jun 2018 17:25:42 +0200
 
