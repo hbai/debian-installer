@@ -312,6 +312,8 @@ debian-installer (20160630~bpo8+1) jessie-backports; urgency=medium
   * config/common: Add “USE_PROPOSED_UPDATES ?= 0”. Having an explicit
     default setting makes it possible to pass extra parameters to the
     gen-sources.list.udeb script.
+  * Automatically enable backports support if the target distribution ends
+    with “-backports”.
 
  -- Cyril Brulebois <cyril@debamax.com>  Tue, 23 Aug 2016 19:03:38 +0200
 

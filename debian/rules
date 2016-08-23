@@ -21,8 +21,13 @@ endif
 # Adjust for non-released ports if needed:
 RELEASE_ARCHES=amd64 arm64 armel armhf i386 mips mips64el mipsel ppc64el s390x
 ifeq (,$(filter $(ARCH), $(RELEASE_ARCHES)))
-USE_UNRELEASED=1
-USE_UDEBS_FROM=unstable
+	USE_UNRELEASED=1
+	USE_UDEBS_FROM=unstable
+endif
+
+# Check whether to enable support for backports:
+ifneq (,$(filter %-backports,$(SUITE)))
+	USE_BACKPORTS_FROM=$(SUITE)
 endif
 
 ARCHIVEDIR=debian/tmp/installer-$(ARCH)
@@ -46,6 +51,7 @@ build-images:
 		USE_UDEBS_FROM=$(USE_UDEBS_FROM) BUILD_DATE=$(DATE) \
 		USE_PROPOSED_UPDATES=$(USE_PROPOSED_UPDATES) \
 		USE_UNRELEASED=$(USE_UNRELEASED) \
+		USE_BACKPORTS_FROM=$(USE_BACKPORTS_FROM) \
 		TRANSSTATUS=$(TRANSSTATUS) BOOTMENU_BEEP=$(BOOTMENU_BEEP)
 
 build: build-arch build-indep

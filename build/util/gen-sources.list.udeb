@@ -9,6 +9,7 @@ SOURCES_LIST=$1
 SUITE=$2
 UDEB_COMPONENTS=$3
 USE_PROPOSED_UPDATES=$4
+USE_BACKPORTS_FROM=$5 # optional
 
 # Set to 1 or 2 to see increasing debug info about mirror tests
 # Use 0 for quiet (normal) operation
@@ -89,6 +90,12 @@ for mirror in $MIRRORS; do
 			echo "$mirror $SUITE-proposed-updates $UDEB_COMPONENTS"
 			echo "INFO: using '$tmirror' for $SUITE-proposed-updates" >&2
 		fi
+		if [ ! -z "$USE_BACKPORTS_FROM" ] &&
+		   test_url $tmirror/dists/$USE_BACKPORTS_FROM/Release; then
+			echo "$mirror $USE_BACKPORTS_FROM $UDEB_COMPONENTS"
+			echo "INFO: using '$tmirror' for backports ($USE_BACKPORTS_FROM)" >&2
+		fi
+
 	else
 		echo "$mirror $SUITE $UDEB_COMPONENTS"
 		if [ "$USE_PROPOSED_UPDATES" = 1 ]; then
