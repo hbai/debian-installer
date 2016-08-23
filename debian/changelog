@@ -303,6 +303,14 @@ debian-installer (20161027) unstable; urgency=medium
 
  -- Cyril Brulebois <kibi@debian.org>  Thu, 27 Oct 2016 22:09:07 +0200
 
+debian-installer (20160630~bpo8+1) jessie-backports; urgency=medium
+
+  [ Cyril Brulebois (DEBAMAX) ]
+  * Prepare building d-i with bits from backports. Based on:
+    https://lists.debian.org/debian-boot/2014/01/msg00407.html
+
+ -- Cyril Brulebois <cyril@debamax.com>  Tue, 23 Aug 2016 19:03:38 +0200
+
 debian-installer (20160630) unstable; urgency=medium
 
   [ Cyril Brulebois ]
