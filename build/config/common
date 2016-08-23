@@ -60,6 +60,9 @@ USE_UDEBS_FROM ?= unstable
 # Archive components from which to fetch debian-installer modules.
 UDEB_COMPONENTS ?= main/debian-installer
 
+# Whether to enable <suite>-proposed-updates:
+USE_PROPOSED_UPDATES ?= 0
+
 # The date the installer is built.
 BUILD_DATE ?= $(shell date -u '+%Y%m%d-%H:%M')
 # The date the installer source was last changed;  we prefer that the
