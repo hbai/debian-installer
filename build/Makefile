@@ -329,7 +329,7 @@ ifdef TRANSSTATUS
 	# Do this first to make possible warnings more visible.
 	@echo; \
 	if [ -f "$(TRANSSTATUS)" ]; then \
-		if [ "$(USE_PROPOSED_UPDATES)" != 1 ]; then \
+		if [ "$(USE_PROPOSED_UPDATES)" != 1 -a -z "$(USE_BACKPORTS_FROM)" ]; then \
 			olddate=$$(grep "^# Generated on:" $(TRANSSTATUS) | sed "s/.*: //"); \
 			if [ "$$olddate" ]; then \
 				if [ $$(( $$(date -u "+%s") - \
