@@ -57,6 +57,9 @@ DEBIAN_VERSION ?= buster
 # daily images. For official builds this is overruled in debian/rules.
 USE_UDEBS_FROM ?= unstable
 
+# Define which backports suite to use, if any:
+USE_UDEBS_BACKPORTS_FROM ?=
+
 # Archive components from which to fetch debian-installer modules.
 UDEB_COMPONENTS ?= main/debian-installer
 

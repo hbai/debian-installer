@@ -116,6 +116,7 @@ export KEYRING
 export KERNELVERSION
 export LOCALUDEBDIR
 export SOURCE_DATE_EPOCH
+export USE_UDEBS_BACKPORTS_FROM
 
 ifneq ($(shell id -u),0)
   ROOTCMD ?= fakeroot
@@ -667,7 +668,7 @@ sources.list.udeb:
 			echo "deb $(MIRROR) unreleased $(UDEB_COMPONENTS)"; \
 		fi \
 	else \
-		gen-sources.list.udeb "$(SYSTEM_SOURCES_LIST)" $(USE_UDEBS_FROM) $(UDEB_COMPONENTS) $(USE_PROPOSED_UPDATES); \
+		gen-sources.list.udeb "$(SYSTEM_SOURCES_LIST)" $(USE_UDEBS_FROM) $(UDEB_COMPONENTS) $(USE_PROPOSED_UPDATES) $(USE_UDEBS_BACKPORTS_FROM); \
 		if [ "$(USE_UNRELEASED)" = 1 ]; then \
 			gen-sources.list.udeb "$(SYSTEM_SOURCES_LIST)" unreleased $(UDEB_COMPONENTS); \
 		fi \
@@ -681,6 +682,10 @@ sources.list.udeb:
 	fi
 	@if [ "$(USE_PROPOSED_UPDATES)" = 1 ] && ! grep -q proposed-updates $@; then \
 		echo "ERROR: no valid source for $(USE_UDEBS_FROM)-proposed-updates"; \
+		exit 1; \
+	fi
+	@if [ -n "$(USE_UDEBS_BACKPORTS_FROM)" ] && ! grep -q "$(USE_UDEBS_BACKPORTS_FROM)" $@; then \
+		echo "ERROR: no valid source for backports ($(USE_UDEBS_BACKPORTS_FROM))"; \
 		exit 1; \
 	fi
 
