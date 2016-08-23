@@ -487,6 +487,9 @@ ifndef OMIT_RELEASE_INFO
 	mkdir -p $(TREE)/etc/
 	echo $(DEBIAN_RELEASE) >$(TREE)/etc/default-release
 	echo $(USE_UDEBS_FROM) >$(TREE)/etc/udebs-source
+ifdef USE_BACKPORTS_FROM
+	echo $(USE_BACKPORTS_FROM) >$(TREE)/etc/udebs-backports-source
+endif
 endif
 
 	# Create a dev tree.
