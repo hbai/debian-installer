@@ -26,6 +26,8 @@ debian-installer (2018XXXX) UNRELEASED; urgency=medium
   * Build against stretch, using stretch and stretch-pu udebs.
   * Update configuration for codename and version.
   * Set USE_BACKPORTS_FROM=stretch-backports.
+  * Set linux ABI to 4.14.0-0.bpo.2 (stretch-backports) instead of
+    4.14.0-3 (buster).
 
  -- Cyril Brulebois <kibi@debian.org>  Tue, 26 Dec 2017 15:10:47 +0100
 
