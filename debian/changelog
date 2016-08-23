@@ -13,6 +13,8 @@ debian-installer (2018XXXX) UNRELEASED; urgency=medium
   * config/common: Add “USE_PROPOSED_UPDATES ?= 0”. Having an explicit
     default setting makes it possible to pass extra parameters to the
     gen-sources.list.udeb script.
+  * Add support for a new USE_BACKPORTS_FROM variable, which can be used
+    to set an extra entry in sources.list
 
  -- Cyril Brulebois <kibi@debian.org>  Tue, 26 Dec 2017 15:10:47 +0100
 
