@@ -25,3 +25,7 @@ ca-certificates-udeb
 
 libkmod2-udeb [linux]
 kldutils-udeb [kfreebsd]
+
+# force inclusion for test -- NOT for release
+pkgsel
+
