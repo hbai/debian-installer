@@ -26,6 +26,7 @@ ca-certificates-udeb
 libkmod2-udeb [linux]
 kldutils-udeb [kfreebsd]
 
-# force inclusion for test -- NOT for release
+# NOT FOR RELEASE -- just trying to test new pkgsel version
 pkgsel
-
+# which pulls this in and breaks things, so stop that
+live-installer -
