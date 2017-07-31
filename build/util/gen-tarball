@@ -18,6 +18,8 @@ fi
 
 # Replace all symlinks with hardlinks
 find "$SOURCE_DIR" -type l ! -name current -exec sh -c 'source=$(readlink -m "$0"); rm "$0"; cp -al "$source" "$0"' {} \;
+# Find all remaining duplicated files
+jdupes --linkhard --recurse --symlinks "$SOURCE_DIR"
 
 # Clamp timestamps to be no later than SOURCE_DATE_EPOCH, if defined in
 # the environment.  Typically it is the time of the most recent entry in
