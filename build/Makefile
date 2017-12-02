@@ -486,6 +486,9 @@ ifndef OMIT_RELEASE_INFO
 	mkdir -p $(TREE)/etc/
 	echo $(DEBIAN_RELEASE) >$(TREE)/etc/default-release
 	echo $(USE_UDEBS_FROM) >$(TREE)/etc/udebs-source
+	if [ -n $(SNAPSHOT_TS) ]; then \
+		echo http://snapshot.debian.org/archive/debian/$(SNAPSHOT_TS) >$(TREE)/etc/snapshot-base-url; \
+	fi
 endif
 
 	# Create a dev tree.

@@ -12,6 +12,9 @@ debian-installer (201709XX) UNRELEASED; urgency=medium
     Valid-Until check when this is requested, since signatures are likely
     expired. Most useful for bisecting when a specific regression was
     introduced. (See: #872598)
+  * Extend support by writing the base URL to /etc/snapshot-base-url when
+    SNAPSHOT_TS is set, so that net-retriever can use this instead of the
+    configured mirror, to get into the same time machine.
 
   [ Karsten Merker ]
   * Bump Linux kernel ABI from 4.12.0-2 to 4.13.0-1
