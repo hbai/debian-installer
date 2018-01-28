@@ -169,28 +169,22 @@ if [ "$KERNELVERSION" ]; then
 	trap cleanup EXIT HUP INT QUIT TERM
 fi
 
+env|grep BACKPORTED
+
 # Prepare preferences file if needed:
-BACKPORTED_SOURCES_FILE=backported-sources
-cat > "$BACKPORTED_SOURCES_FILE" << EOF
-brltty
-debootstrap
-linux
-linux-latest
-systemd
-EOF
-if [ -f "$BACKPORTED_SOURCES_FILE" ]; then
+if [ -n "$BACKPORTED_SOURCES" ]; then
 	rm -f "preferences.$TYPE.local"
-	while read source; do
-		echo "Checking for source $source in $BACKPORTED_SOURCES_FILE"
+	for source in $BACKPORTED_SOURCES; do
 		binaries=$(grep-dctrl -s Package -F Source $source $APTDIR/state/lists/*stretch-backports*Packages | awk '{print $2}' | xargs)
-		#echo "grep-dctrl -s Package -F Source $source $APTDIR/state/lists/*stretch-backports*Packages | awk '{print $2}' | xargs"
+		echo "Checking for source $source"
 		if [ -n "$binaries" ]; then
-		echo "Package: $binaries"              >> "preferences.$TYPE.local"
-		echo "Pin: release n=stretch-backports" >> "preferences.$TYPE.local"
-		echo "Pin-Priority: 900"               >> "preferences.$TYPE.local"
-		echo ""                                >> "preferences.$TYPE.local"
+			echo "... found binaries: $binaries"
+			echo "Package: $binaries"              >> "preferences.$TYPE.local"
+			echo "Pin: release n=stretch-backports" >> "preferences.$TYPE.local"
+			echo "Pin-Priority: 900"               >> "preferences.$TYPE.local"
+			echo ""                                >> "preferences.$TYPE.local"
 		fi
-	done < "$BACKPORTED_SOURCES_FILE"
+	done
 fi
 exit 1
 
