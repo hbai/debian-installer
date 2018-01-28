@@ -192,6 +192,7 @@ if [ -f "$BACKPORTED_SOURCES_FILE" ]; then
 		fi
 	done < "$BACKPORTED_SOURCES_FILE"
 fi
+exit 1
 
 # Get udebs.
 if [ "$DEBUG" = y ]; then
