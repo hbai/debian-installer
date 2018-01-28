@@ -1,4 +1,4 @@
-debian-installer (2018XXXX) UNRELEASED; urgency=medium
+debian-installer (2018XXXX) stretch-backports; urgency=medium
 
   [ Cyril Brulebois ]
   * Bump Linux kernel ABI from 4.13.0-1 to 4.14.0-3
