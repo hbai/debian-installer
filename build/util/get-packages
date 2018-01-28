@@ -182,11 +182,11 @@ if [ -f "$BACKPORTED_SOURCES_FILE" ]; then
 	rm -f "preferences.$TYPE.local"
 	while read source; do
 		echo "Checking for source $source in $BACKPORTED_SOURCES_FILE"
-		binaries=$(grep-dctrl -s Package -F Source $source $APTDIR/state/lists/*jessie-backports*Packages | awk '{print $2}' | xargs)
-		#echo "grep-dctrl -s Package -F Source $source $APTDIR/state/lists/*jessie-backports*Packages | awk '{print $2}' | xargs"
+		binaries=$(grep-dctrl -s Package -F Source $source $APTDIR/state/lists/*stretch-backports*Packages | awk '{print $2}' | xargs)
+		#echo "grep-dctrl -s Package -F Source $source $APTDIR/state/lists/*stretch-backports*Packages | awk '{print $2}' | xargs"
 		if [ -n "$binaries" ]; then
 		echo "Package: $binaries"              >> "preferences.$TYPE.local"
-		echo "Pin: release n=jessie-backports" >> "preferences.$TYPE.local"
+		echo "Pin: release n=stretch-backports" >> "preferences.$TYPE.local"
 		echo "Pin-Priority: 900"               >> "preferences.$TYPE.local"
 		echo ""                                >> "preferences.$TYPE.local"
 		fi
