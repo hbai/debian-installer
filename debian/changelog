@@ -321,8 +321,6 @@ debian-installer (20160630~bpo8+1) jessie-backports; urgency=medium
   * Revert "Replace ttf-cjk-compact-udeb with fonts-android-udeb" for the
     upload targetting jessie.
      - Stop excluding libc{0.1,0.3,6,6.1} (mklibs-copy vs. libnss).
-     - Drop references to libnss-files-udeb and libnss-dns-udeb, they're
-       now provided by libc-udeb, as of glibc 2.22-5.
 
  -- Cyril Brulebois <cyril@debamax.com>  Tue, 23 Aug 2016 19:03:38 +0200
 
