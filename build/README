@@ -370,6 +370,10 @@ USE_BACKPORTS_FROM
   meaning no backports support.
   Included in /etc/udebs-backports-source in most initrds.
 
+BACKPORTED_SOURCES
+  When USE_BACKPORTS_FROM is set, set up APT pinning during the build to
+  prefer packages built from those source packages.
+
 OMIT_RELEASE_INFO
   Can be used to suppress the inclusion of the files /etc/default-release and
   /etc/udebs-source in some targets (like boot floppies).

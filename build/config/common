@@ -57,6 +57,10 @@ DEBIAN_VERSION ?= stretch
 # daily images. For official builds this is overruled in debian/rules.
 USE_UDEBS_FROM ?= unstable
 
+# Define source packages for which binaries are to be preferred during the
+# build, thanks to some APT pinning:
+BACKPORTED_SOURCES ?=
+
 # Archive components from which to fetch debian-installer modules.
 UDEB_COMPONENTS ?= main/debian-installer
 
