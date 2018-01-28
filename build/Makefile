@@ -116,6 +116,7 @@ export KEYRING
 export KERNELVERSION
 export LOCALUDEBDIR
 export SOURCE_DATE_EPOCH
+export BACKPORTED_SOURCES
 
 ifneq ($(shell id -u),0)
   ROOTCMD ?= fakeroot
