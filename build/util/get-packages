@@ -175,12 +175,12 @@ env|grep BACKPORTED
 if [ -n "$BACKPORTED_SOURCES" ]; then
 	rm -f "preferences.$TYPE.local"
 	for source in $BACKPORTED_SOURCES; do
-		binaries=$(grep-dctrl -s Package -F Source $source $APTDIR/state/lists/*stretch-backports*Packages | awk '{print $2}' | xargs)
+		binaries=$(grep-dctrl -s Package -F Source $source $APTDIR/state/lists/*${USE_BACKPORTS_FROM}*Packages | awk '{print $2}' | xargs)
 		printf "Checking for source $source: "
 		if [ -n "$binaries" ]; then
 			echo "$binaries"
 			echo "Package: $binaries"              >> "preferences.$TYPE.local"
-			echo "Pin: release n=stretch-backports" >> "preferences.$TYPE.local"
+			echo "Pin: release n=${USE_BACKPORTS_FROM}" >> "preferences.$TYPE.local"
 			echo "Pin-Priority: 900"               >> "preferences.$TYPE.local"
 			echo ""                                >> "preferences.$TYPE.local"
 		else
