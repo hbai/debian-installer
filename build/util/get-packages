@@ -188,7 +188,6 @@ if [ -n "$BACKPORTED_SOURCES" ]; then
 		fi
 	done
 fi
-exit 1
 
 # Get udebs.
 if [ "$DEBUG" = y ]; then
