@@ -58,7 +58,7 @@ DEBIAN_VERSION ?= stretch
 USE_UDEBS_FROM ?= unstable
 
 # Define which backports suite to use, if any:
-USE_BACKPORTS_FROM ?=
+USE_BACKPORTS_FROM ?= stretch-backports
 
 # Define source packages for which binaries from backports are to be
 # preferred during the build, thanks to some APT pinning:
