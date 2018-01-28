@@ -62,7 +62,7 @@ USE_BACKPORTS_FROM ?= stretch-backports
 
 # Define source packages for which binaries from backports are to be
 # preferred during the build, thanks to some APT pinning:
-BACKPORTED_SOURCES ?=
+BACKPORTED_SOURCES ?= linux net-retriever
 
 # Archive components from which to fetch debian-installer modules.
 UDEB_COMPONENTS ?= main/debian-installer

@@ -28,6 +28,10 @@ debian-installer (2018XXXX) UNRELEASED; urgency=medium
   * Set USE_BACKPORTS_FROM=stretch-backports.
   * Set linux ABI to 4.14.0-0.bpo.2 (stretch-backports) instead of
     4.14.0-3 (buster).
+  * Set BACKPORTED_SOURCES to include linux and net-retriever. The former
+    is the whole point of implementing backports support; the latter is
+    needed to teach net-retriever about the extra Packages file at
+    runtime.
 
  -- Cyril Brulebois <kibi@debian.org>  Tue, 26 Dec 2017 15:10:47 +0100
 
