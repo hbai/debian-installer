@@ -17,6 +17,10 @@ debian-installer (2018XXXX) UNRELEASED; urgency=medium
     to set an extra entry in sources.list
   * When USE_BACKPORTS_FROM is set, generate /etc/udebs-backports-source
     so that the running d-i knows that backports support is requested.
+  * Add support for a new BACKPORTED_SOURCES variable, which can be used
+    to specify which binaries should be picked from the backports suite
+    (instead of the base suite). Source packages are specified, for
+    brevity (hello, linux!).
 
  -- Cyril Brulebois <kibi@debian.org>  Tue, 26 Dec 2017 15:10:47 +0100
 

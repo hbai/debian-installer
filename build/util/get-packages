@@ -169,6 +169,24 @@ if [ "$KERNELVERSION" ]; then
 	trap cleanup EXIT HUP INT QUIT TERM
 fi
 
+# Prepare preferences file if needed:
+if [ -n "$BACKPORTED_SOURCES" ]; then
+	rm -f "preferences.$TYPE.local"
+	for source in $BACKPORTED_SOURCES; do
+		binaries=$(grep-dctrl -s Package -F Source $source $APTDIR/state/lists/*${USE_BACKPORTS_FROM}*Packages | awk '{print $2}' | xargs)
+		printf "Checking for source $source: "
+		if [ -n "$binaries" ]; then
+			echo "$binaries"
+			echo "Package: $binaries"                   >> "preferences.$TYPE.local"
+			echo "Pin: release n=${USE_BACKPORTS_FROM}" >> "preferences.$TYPE.local"
+			echo "Pin-Priority: 900"                    >> "preferences.$TYPE.local"
+			echo ""                                     >> "preferences.$TYPE.local"
+		else
+			echo "(nothing)"
+		fi
+	done
+fi
+
 # Get udebs.
 if [ "$DEBUG" = y ]; then
 	mkdir -p $DEBUGUDEBDIR
