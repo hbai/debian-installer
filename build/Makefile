@@ -636,8 +636,7 @@ endif
 	# (#898468). Beware, fc-cache insists on having a directory
 	# under /usr/local:
 	if [ -e "$(TREE)/etc/fonts" ] || [ -e "$(TREE)/usr/share/fonts" ]; then \
-		mkdir -p "$(TREE)/usr/local/share/fonts"; \
-		fc-cache -s -y "$(TREE)"; \
+		sed 's/^$$/haveged/' -i "$(TREE)/lib/debian-installer.d/S62Xorg"; \
 	fi
 
 	# Remove some unnecessary dpkg files.
