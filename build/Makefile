@@ -554,6 +554,10 @@ endif
 		rm -f $(TREE)/lib/$$lib.*; \
 	done
 
+	# Apply local patches helping test d-i against a third party mirror:
+	patch "$(TREE)/usr/lib/debian-installer/retriever/net-retriever" \
+		localpatches/net-retriever_mirror-udeb-protocol-hostname.diff
+
 	# Reduce status file to contain only the elements we care about.
 	egrep -i '^((Status|Provides|Depends|Package|Version|Description|installer-menu-item|Description-..):|$$)' \
 		$(DPKGDIR)/status > $(DPKGDIR)/status.new
