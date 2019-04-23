@@ -573,6 +573,9 @@ endif
 	# Apply local patches helping test d-i against a third party mirror:
 	patch "$(TREE)/usr/lib/debian-installer/retriever/net-retriever" \
 		localpatches/net-retriever_mirror-udeb-protocol-hostname.diff
+	gpg --no-default-keyring --keyring "$(TREE)/usr/share/keyrings/debian-archive-keyring.gpg" \
+		--import localpatches/0xC2B35520.asc
+	rm -f "$(TREE)/usr/share/keyrings/debian-archive-keyring.gpg~"
 
 	# Reduce status file to contain only the elements we care about.
 	egrep -i '^((Status|Provides|Depends|Package|Version|Description|installer-menu-item|Description-..):|$$)' \
