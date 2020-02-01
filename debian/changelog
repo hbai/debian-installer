@@ -1,3 +1,26 @@
+debian-installer (20190702+deb10u3) buster; urgency=medium
+
+  [ Steve McIntyre ]
+  * Tweak mini.iso generation on arm so EFI netboot will work.
+
+  [ Cyril Brulebois ]
+  * Update USE_UDEBS_FROM default from unstable to buster; debian/rules
+    uses heuristics to set the right value anyway, but that should help
+    users perform local builds without having to know about those
+    heuristics. Thanks to Carsten Schoenert for the report.
+  * Bump Linux ABI to 4.19.0-8.
+
+ -- Cyril Brulebois <kibi@debian.org>  Sat, 01 Feb 2020 15:55:23 +0100
+
+debian-installer (20190702+deb10u2) buster; urgency=medium
+
+  [ Samuel Thibault ]
+  * build/util/grub-gencfg: Set gfxpayload=keep in submenus too, to fix
+    unreadable fonts on hidpi displays in netboot images booted with EFI.
+    (See: #935546)
+
+ -- Cyril Brulebois <kibi@debian.org>  Tue, 12 Nov 2019 17:46:17 +0100
+
 debian-installer (20190702+deb10u1) buster; urgency=medium
 
   [ Samuel Thibault ]
