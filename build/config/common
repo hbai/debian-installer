@@ -11,7 +11,7 @@
 
 # Default kernel ABI version to use. Append a kernel flavour to
 # produce KERNELVERSION.
-LINUX_KERNEL_ABI ?= 4.9.0-11
+LINUX_KERNEL_ABI ?= 4.9.0-12
 
 # Always "di" these days
 KERNEL_FLAVOUR ?= di
@@ -55,7 +55,7 @@ DEBIAN_VERSION ?= stretch
 # Define here from what release (codename!) components (udebs) should be taken
 # to build debian-installer. By default this is set to 'unstable' for building
 # daily images. For official builds this is overruled in debian/rules.
-USE_UDEBS_FROM ?= unstable
+USE_UDEBS_FROM ?= stretch
 
 # Archive components from which to fetch debian-installer modules.
 UDEB_COMPONENTS ?= main/debian-installer

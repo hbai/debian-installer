@@ -1,3 +1,19 @@
+debian-installer (20170615+deb9u8) stretch; urgency=medium
+
+  [ Samuel Thibault ]
+  * build/util/grub-gencfg: Set gfxpayload=keep in submenus too, to fix
+    unreadable fonts on hidpi displays in netboot images booted with EFI.
+    (See: #935546)
+
+  [ Cyril Brulebois ]
+  * Bump linux ABI to 4.9.0-12.
+  * Update USE_UDEBS_FROM default from unstable to stretch; debian/rules
+    uses heuristics to set the right value anyway, but that should help
+    users perform local builds without having to know about those
+    heuristics. Thanks to Carsten Schoenert for the report.
+
+ -- Cyril Brulebois <kibi@debian.org>  Sun, 02 Feb 2020 18:02:06 +0100
+
 debian-installer (20170615+deb9u7) stretch; urgency=medium
 
   [ Samuel Thibault ]
