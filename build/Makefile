@@ -571,8 +571,10 @@ endif
 	done
 
 	# Apply local patches helping test d-i against a third party mirror:
-	patch "$(TREE)/usr/lib/debian-installer/retriever/net-retriever" \
-		localpatches/net-retriever_mirror-udeb-protocol-hostname.diff
+	if [ -f "$(TREE)/usr/lib/debian-installer/retriever/net-retriever" ]; then \
+		patch "$(TREE)/usr/lib/debian-installer/retriever/net-retriever" \
+			localpatches/net-retriever_mirror-udeb-protocol-hostname.diff; \
+	fi
 	gpg --no-default-keyring --keyring "$(TREE)/usr/share/keyrings/debian-archive-keyring.gpg" \
 		--import localpatches/0xC2B35520.asc
 	rm -f "$(TREE)/usr/share/keyrings/debian-archive-keyring.gpg~"
