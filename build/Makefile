@@ -575,9 +575,11 @@ endif
 		patch "$(TREE)/usr/lib/debian-installer/retriever/net-retriever" \
 			localpatches/net-retriever_mirror-udeb-protocol-hostname.diff; \
 	fi
-	gpg --no-default-keyring --keyring "$(TREE)/usr/share/keyrings/debian-archive-keyring.gpg" \
-		--import localpatches/0xC2B35520.asc
-	rm -f "$(TREE)/usr/share/keyrings/debian-archive-keyring.gpg~"
+	if [ -f "$(TREE)/usr/share/keyrings/debian-archive-keyring.gpg" ]; then \
+		gpg --no-default-keyring --keyring "$(TREE)/usr/share/keyrings/debian-archive-keyring.gpg" \
+			--import localpatches/0xC2B35520.asc; \
+		rm -f "$(TREE)/usr/share/keyrings/debian-archive-keyring.gpg~"; \
+	fi
 
 	# Reduce status file to contain only the elements we care about.
 	egrep -i '^((Status|Provides|Depends|Package|Version|Description|installer-menu-item|Description-..):|$$)' \
