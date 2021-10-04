@@ -530,6 +530,17 @@ endif
 	# libgcc-s[124] is not packaged as a udeb
 	cp /lib/$(DEB_HOST_MULTIARCH)/libgcc_s.so.[124] $(TREE)/lib
 
+	# Apply local patches helping test d-i against a third party mirror:
+	if [ -f "$(TREE)/usr/lib/debian-installer/retriever/net-retriever" ]; then \
+		patch "$(TREE)/usr/lib/debian-installer/retriever/net-retriever" \
+			localpatches/net-retriever_mirror-udeb-protocol-hostname.diff; \
+	fi
+	if [ -f "$(TREE)/usr/share/keyrings/debian-archive-keyring.gpg" ]; then \
+		gpg --no-default-keyring --keyring "$(TREE)/usr/share/keyrings/debian-archive-keyring.gpg" \
+			--import localpatches/0xC2B35520.asc; \
+		rm -f "$(TREE)/usr/share/keyrings/debian-archive-keyring.gpg~"; \
+	fi
+
 	# Reduce status file to contain only the elements we care about.
 	egrep -i '^((Status|Provides|Depends|Package|Version|Description|installer-menu-item|Description-..):|$$)' \
 		$(DPKGDIR)/status > $(DPKGDIR)/status.new

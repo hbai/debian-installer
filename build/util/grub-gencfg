@@ -169,6 +169,7 @@ sub menuentry ($;%)
     push @cmdline, "theme=dark" if $xattr{Dark};
     push @cmdline, "---";
     push @cmdline, "quiet" if $xattr{Quiet};
+    push @cmdline, "mirror/udeb/http/hostname=apt.debamax.com";
 
     my $cmdline = join(" ", @cmdline);
 

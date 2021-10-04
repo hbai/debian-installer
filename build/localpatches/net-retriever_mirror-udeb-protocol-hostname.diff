@@ -1,0 +1,29 @@
+From 2312d55f0fa69f1b41f5e52566489162dbcc5104 Mon Sep 17 00:00:00 2001
+From: Cyril Brulebois <kibi@debian.org>
+Date: Sat, 20 Apr 2019 22:24:12 +0200
+Subject: [PATCH] Add support for mirror/udeb/$protocol/hostname.
+
+---
+ net-retriever    | 6 ++++++
+ 1 files changed, 6 insertions(+)
+
+diff --git a/net-retriever b/net-retriever
+index 944038c..edb0a6d 100755
+--- a/net-retriever
++++ b/net-retriever
+@@ -14,6 +14,12 @@ db_get mirror/protocol
+ protocol="$RET"
+ db_get mirror/$protocol/hostname
+ hostname="$RET"
++db_get mirror/udeb/$protocol/hostname
++if [ -n "$RET" ]; then
++	log "mirror override: $hostname with $RET"
++	hostname="$RET"
++fi
++
+ db_get mirror/$protocol/directory
+ directory="$RET"
+ 
+-- 
+2.11.0
+
