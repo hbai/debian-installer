@@ -1,3 +1,14 @@
+debian-installer (20210731+deb11u4) bullseye; urgency=medium
+
+  * Reinstate some armel netboot targets, as suggested by Martin
+    Michlmayr (Closes: #934072) and tested by Rick Thomas (thanks!):
+     - openrd-base
+     - openrd-client
+     - openrd-ultimate
+  * Bump Linux kernel ABI to 5.10.0-16.
+
+ -- Cyril Brulebois <kibi@debian.org>  Tue, 05 Jul 2022 17:57:59 +0200
+
 debian-installer (20210731+deb11u3) bullseye; urgency=medium
 
   * Bump Linux kernel ABI to 5.10.0-13.
