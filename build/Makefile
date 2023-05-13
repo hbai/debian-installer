@@ -56,6 +56,17 @@
 # Temporary workaround for #823881:
 export MTOOLS_SKIP_CHECK=1
 
+# Temporary workaround for FIXME:
+export DRM_DIR = /lib/modules/$(KERNELVERSION)/kernel/drivers/gpu/drm
+export DRM_MODULES =           \
+	drm_shmem_helper.ko    \
+	drm_ttm_helper.ko      \
+	drm_vram_helper.ko     \
+	tiny/bochs.ko          \
+	tiny/cirrus.ko         \
+	ttm/ttm.ko             \
+	vboxvideo/vboxvideo.ko
+
 # Add to PATH so dpkg will always work, and so local programs will be found.
 PATH := util:$(PATH):/usr/sbin:/sbin
 EATMYDATA = $(shell which eatmydata 2>/dev/null)
@@ -429,6 +440,14 @@ ifdef SSL_CERTS
 	openssl rehash $(TREE)/etc/ssl/certs
 	mkdir -p $(TREE)/usr/lib/ssl
 	ln -nsf ../../../etc/ssl/certs $(TREE)/usr/lib/ssl/certs
+endif
+
+ifeq ($(IS_PURE_GTK),1)
+	set -e; \
+	for module in $(DRM_MODULES); do \
+		mkdir -p $(TREE)$(DRM_DIR)/$$(dirname $$module); \
+		cp $(DRM_DIR)/$$module $(TREE)$(DRM_DIR)/$$module; \
+	done
 endif
 
 ifeq ($(DEB_HOST_ARCH_OS),linux)
