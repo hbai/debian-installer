@@ -1,3 +1,10 @@
+debian-installer (20230607+deb12u2) bookworm; urgency=medium
+
+  * Bump Linux kernel ABI to 6.1.0-13.
+  * Adjust linux-image build-deps as well.
+
+ -- Cyril Brulebois <kibi@debian.org>  Mon, 02 Oct 2023 00:16:20 +0200
+
 debian-installer (20230607+deb12u1) bookworm; urgency=medium
 
   * Bootstrap bookworm stable branch:
